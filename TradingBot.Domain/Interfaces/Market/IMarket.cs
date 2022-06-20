@@ -8,6 +8,8 @@ namespace TradingBot.Domain.Interfaces.Market
 {
     public interface IMarket
     {
-        Task<double> GetMarketPrice();
+        Task<decimal> GetMarketPrice(string currencySymbol);
+        Task<decimal> PlaceSellOrder(string currencySymbol);
+        Task<decimal> PlaceBuyOrder(string currencySymbol);
     }
 }

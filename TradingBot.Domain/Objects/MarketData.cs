@@ -9,8 +9,8 @@ namespace TradingBot.Domain.Objects
     internal class MarketData
     {
         public string MarketId { get; set; }
-        public double CurrentPrice { get; set; }
-        public double PreviousPrice { get; set; }
-        public double PurchasePrice { get; set; }
+        public decimal CurrentPrice { get; set; }
+        public decimal PreviousPrice { get; set; }
+        public decimal PurchasePrice { get; set; }
     }
 }

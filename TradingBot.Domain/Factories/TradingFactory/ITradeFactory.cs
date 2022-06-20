@@ -16,6 +16,6 @@ namespace TradingBot.Domain.Factories.TradingFactory
     internal interface ITradeStrategy
     {
         TradeStrategy TradeStrategy { get; }
-        Trade TradeStategy(double currentPrice, double previousPrice);
+        Trade TradeStategy(decimal currentPrice, decimal previousPrice);
     }
 }
