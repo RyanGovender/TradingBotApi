@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TradingBot.Api", "TradingBotApi\TradingBot.Api.csproj", "{F863310A-85D0-4536-8762-11BFAAC7C0BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingBot.Domain", "TradingBot.Domain\TradingBot.Domain.csproj", "{15BB8BFC-9CC5-473C-BF19-A916CDE9224F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F863310A-85D0-4536-8762-11BFAAC7C0BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F863310A-85D0-4536-8762-11BFAAC7C0BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F863310A-85D0-4536-8762-11BFAAC7C0BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F863310A-85D0-4536-8762-11BFAAC7C0BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BB8BFC-9CC5-473C-BF19-A916CDE9224F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BB8BFC-9CC5-473C-BF19-A916CDE9224F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BB8BFC-9CC5-473C-BF19-A916CDE9224F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BB8BFC-9CC5-473C-BF19-A916CDE9224F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A6AA8AEE-F170-4865-B5C2-2FD6384C64FD}
+	EndGlobalSection
+EndGlobal
