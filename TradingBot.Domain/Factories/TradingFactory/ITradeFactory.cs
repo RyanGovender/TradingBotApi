@@ -8,7 +8,7 @@ using TradingBot.Domain.Objects;
 
 namespace TradingBot.Domain.Factories.TradingFactory
 {
-    internal interface ITradeFactory
+    public interface ITradeFactory
     {
         Trade RunFactory(TradeStrategy tradeStrategy, MarketData marketData);
     }

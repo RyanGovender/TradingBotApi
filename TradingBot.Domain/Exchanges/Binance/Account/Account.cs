@@ -1,5 +1,6 @@
 ﻿using Binance.Net.Clients;
 using Binance.Net.Objects;
+using Binance.Net.Objects.Models.Spot;
 using CryptoExchange.Net.Authentication;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,16 @@ namespace TradingBot.Domain.Exchanges.Binance.Account
             if (!getAccountInfo.Success) return 0.00;
 
             return (double)getAccountInfo.Data.Balances.First().Total;
+        }
+
+        public async Task<BinanceAccountInfo> GetAccountInformation()
+        {
+            var getAccountInfo = await _binanceConnection.CreateBinanceClient()
+                .SpotApi.Account.GetAccountInfoAsync();
+
+            if (!getAccountInfo.Success) throw new Exception(getAccountInfo.Error?.Message);
+
+            return getAccountInfo.Data;
         }
     }
 }

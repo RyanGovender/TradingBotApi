@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TradingBot.Domain.Interfaces.Account
+namespace TradingBot.Domain.Interfaces.Exchange
 {
-    public interface IAccount
+    public interface IExchange
     {
-        Task<double> GetBalance();
-        Task<BinanceAccountInfo> GetAccountInformation();
+        Task<BinanceExchangeInfo> GetExchangeData();
     }
 }

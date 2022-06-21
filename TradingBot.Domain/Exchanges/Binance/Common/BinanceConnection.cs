@@ -1,6 +1,7 @@
 ﻿using Binance.Net.Clients;
 using Binance.Net.Objects;
 using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,14 @@ namespace TradingBot.Domain.Exchanges.Binance.Common
         {
             var binanceClient = new BinanceClient(new BinanceClientOptions()
             {
-                ApiCredentials = new ApiCredentials("API-KEY", "API-SECRET"),
+                ApiCredentials = new ApiCredentials("WqXgTPBUpALIVM3ULGGHhuLXNEsogJIhsnjmkpTuM2zyPJpwVRfqOaa6VZg654Vf", "oNB7xetILJl9iQxsi0hFMQCkNZVT98h0titLAdJXtmNwFWKdffP0M9rcTL7XPFxC"),
                 // Set options here for this client
+
+                SpotApiOptions = new BinanceApiClientOptions
+                {
+                    BaseAddress = "https://testnet.binance.vision",
+                    RateLimitingBehaviour = RateLimitingBehaviour.Fail
+                },
             });
 
             return binanceClient;

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TradingBot.Domain.Interfaces.Account;
 
-namespace TradingBot.Domain.States
+namespace TradingBot.Domain.Services
 {
-    internal class BuyState 
+    public interface ITradingBotService
     {
-      
+        Task RunBot();
     }
 }

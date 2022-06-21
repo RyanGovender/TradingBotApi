@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingBot.Domain.Objects
 {
-    internal class MarketData
+    public class MarketData
     {
         public string MarketId { get; set; }
         public decimal CurrentPrice { get; set; }

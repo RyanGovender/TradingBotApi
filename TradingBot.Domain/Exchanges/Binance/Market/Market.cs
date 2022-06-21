@@ -22,17 +22,17 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
         public async Task<decimal> GetMarketPrice(string currencySymbol)
         {
             var assetPrice = await _binanceConnection.CreateBinanceClient()
-                .CoinFuturesApi.ExchangeData.GetPricesAsync("BTCUSDT");
+                .SpotApi.ExchangeData.GetPriceAsync(currencySymbol);
 
             if (!assetPrice.Success || assetPrice.Data is null) return 0;
 
-            return assetPrice.Data.FirstOrDefault().Price;
+            return assetPrice.Data.Price; 
         }
         //refator later on
         public async Task<decimal> PlaceBuyOrder(string currencySymbol)
         {
             var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
-               .CoinFuturesApi.Trading.PlaceOrderAsync(currencySymbol, OrderSide.Buy, FuturesOrderType.Market, 1);
+               .SpotApi.Trading.PlaceOrderAsync(currencySymbol, OrderSide.Buy, SpotOrderType.Market,0.1m);
 
             if (!placeBuyOrder.Success || placeBuyOrder.Data is null) return 0;
 
@@ -42,7 +42,7 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
         public async Task<decimal> PlaceSellOrder(string currencySymbol)
         {
             var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
-              .CoinFuturesApi.Trading.PlaceOrderAsync(currencySymbol, OrderSide.Sell, FuturesOrderType.Market, 1);
+              .SpotApi.Trading.PlaceOrderAsync(currencySymbol, OrderSide.Sell, SpotOrderType.Market, 0.1m);
 
             if (!placeBuyOrder.Success || placeBuyOrder.Data is null) return 0;
 
