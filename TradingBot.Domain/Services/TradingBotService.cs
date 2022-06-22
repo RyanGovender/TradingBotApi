@@ -27,7 +27,7 @@ namespace TradingBot.Domain.Services
 
         public async Task RunBot()
         {
-            bool runBot = true;
+            bool runBot = false;
             decimal lastOpPrice = 0;
             string tradingSymbol = "ETHBTC";
             bool isFristTrade = true;
