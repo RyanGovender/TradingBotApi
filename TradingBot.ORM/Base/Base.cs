@@ -7,13 +7,13 @@ using TradingBot.ORM.Objects;
 
 namespace TradingBot.ORM.Base
 {
-    internal class Base : IBaseRepository
+    internal class Base : IBaseRepository, IBaseQuery
     {
         private readonly IRelationalConnectionFactory _conn;
 
-        public Base(IRelationalConnectionFactory connection)
+        public Base(IRelationalConnectionFactory connection!!)
         {
-            _conn = connection ?? throw new ArgumentNullException(nameof(connection));
+            _conn = connection;
         }
 
         public async Task<MatterDapterResponse> DeleteAsync<T>(T entityToDelete) where T : class
@@ -65,7 +65,7 @@ namespace TradingBot.ORM.Base
             }
             catch (Exception ex)
             {
-                return new MatterDapterResponse<IEnumerable<T>>(new List<T>(), ex);
+                return new MatterDapterResponse<IEnumerable<T>>(Array.Empty<T>(), ex);
             }
         }
 
@@ -125,7 +125,7 @@ namespace TradingBot.ORM.Base
             }
             catch(Exception ex)
             {
-                return new MatterDapterResponse<IEnumerable<T>>(new List<T>(), ex);
+                return new MatterDapterResponse<IEnumerable<T>>(Array.Empty<T>(), ex);
             }
         }
     }

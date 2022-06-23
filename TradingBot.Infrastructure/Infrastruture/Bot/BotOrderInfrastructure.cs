@@ -48,7 +48,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
 
         public Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder)
         {
-
+            throw new NotImplementedException();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace TradingBot.ORM.Extension
         public static void AddOrmHelper(this IServiceCollection services)
         {
             services.AddSingleton<IRelationalConnectionFactory, RelationalConnectionFactory>();
+            services.AddSingleton<IBaseQuery, Base.Base>();
             services.AddSingleton<IBaseRepository, Base.Base>();
         }
     }
