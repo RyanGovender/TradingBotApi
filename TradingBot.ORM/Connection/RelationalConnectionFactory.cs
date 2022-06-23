@@ -17,7 +17,7 @@ namespace TradingBot.ORM.Connection
         {
             return dbType switch
             {
-                DbType.POSTGRES => new NpgsqlConnection(_config.GetConnectionString("")),
+                DbType.POSTGRES => new NpgsqlConnection(_config.GetConnectionString("Postgres")),
                 _ => throw new NotSupportedException($"Connection could not be created for {dbType}.")
             };
         }

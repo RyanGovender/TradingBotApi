@@ -1,5 +1,10 @@
 using TradingBot.Api.Services;
 using TradingBot.Domain.Extensions;
+using TradingBot.Infrastructure.Infrastruture.Bot;
+using TradingBot.Infrastructure.Interfaces.Common;
+using TradingBot.Objects.Bot;
+using TradingBot.ORM.Extension;
+using TradingBot.ORM.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +14,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddOrmHelper();
 builder.Services.RunBotTrader();
+//move these to extension later on
+
+builder.Services.AddSingleton<IRepository<BotOrder>, BotOrderInfrastructure>();
+
 builder.Services.AddHostedService<BotService>();
 
 var app = builder.Build();

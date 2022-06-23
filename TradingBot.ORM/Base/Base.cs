@@ -1,4 +1,5 @@
-﻿using Dapper.Contrib.Extensions;
+﻿using Dapper;
+using Dapper.Contrib.Extensions;
 using System.Data;
 using TradingBot.ORM.Connection;
 using TradingBot.ORM.Interfaces;
@@ -103,6 +104,28 @@ namespace TradingBot.ORM.Base
             catch (Exception ex)
             {
                 return new MatterDapterResponse<T>(ex);
+            }
+        }
+
+        //string storeProcedure!!
+        public async Task<MatterDapterResponse<IEnumerable<T>>> RunQueryAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(storeProcedure) && string.IsNullOrEmpty(sqlStatement))
+                {
+                    throw new ArgumentNullException(nameof(sqlStatement) + nameof(storeProcedure));
+                }
+
+                using IDbConnection connection = _conn.GetRelationConnection();
+
+                var result = await connection.QueryAsync<T>(storeProcedure ?? sqlStatement , parameters);
+
+                return new MatterDapterResponse<IEnumerable<T>>(result);
+            }
+            catch(Exception ex)
+            {
+                return new MatterDapterResponse<IEnumerable<T>>(new List<T>(), ex);
             }
         }
     }
