@@ -11,5 +11,7 @@ namespace TradingBot.ORM.Interfaces
         Task<MatterDapterResponse<T>> UpdateAsync<T>(T data) where T : class;
         Task<MatterDapterResponse> DeleteAsync<T>(T entityToDelete) where T : class;
         Task<MatterDapterResponse<T>> FindAsync<T>(object id) where T : class;
+        Task<MatterDapterResponse<IEnumerable<T>>> RunQueryAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null);
+        Task<MatterDapterResponse<T>> RunQuerySingleAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null);
     }
 }

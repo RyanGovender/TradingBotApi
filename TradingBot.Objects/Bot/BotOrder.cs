@@ -14,5 +14,10 @@ namespace TradingBot.Objects.Bot
         public bool HasTimeFrame { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        public BotOrder(int test)
+        {
+
+        }
     }
 }

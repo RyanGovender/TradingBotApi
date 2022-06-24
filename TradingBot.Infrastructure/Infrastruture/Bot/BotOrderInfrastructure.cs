@@ -46,9 +46,33 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             throw new NotImplementedException();
         }
 
-        public Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder)
+        public async Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder!!)
         {
-            throw new NotImplementedException();
+            //check if first trade
+            // get last price from transactions using last buy transaction type
+            var result = await _baseRepo
+                .RunQuerySingleAsync<dynamic>(sqlStatement: $"SELECT tv.\"TransactionAmount\", tv.\"TransactionTypeID\" FROM exchange.transaction tv " +
+                "inner join exchange.BotOrderTransactions bt " +
+                $"on tv.\"ID\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}'");
+            //get trading symbol using exchange ID
+            var currentName = await _baseRepo
+                .RunQuerySingleAsync<string>(sqlStatement: $"SELECT \"Name\" FROM exchange.Exchange e where e.\"ID\" = '{botOrder.ExchangeID}'");
+
+            //TransactionTypeID
+
+            var botA = new BotOrderAggregate()
+            {
+                BotOrderID = botOrder.ID,
+                TradeStrategyID = botOrder.TradeStrategyID,
+                IsActive = botOrder.IsActive,
+                TradingSymbol = currentName?.Source,
+                OrderTypeID = botOrder.OrderTypeID,
+                PurchasePrice = result.Source.TransactionAmount,
+                Quantity = botOrder.Quantity,
+                IsFirstTrade = result?.Source is null
+            };
+
+           return botA;
         }
     }
 }

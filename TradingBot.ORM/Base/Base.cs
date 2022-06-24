@@ -7,7 +7,7 @@ using TradingBot.ORM.Objects;
 
 namespace TradingBot.ORM.Base
 {
-    internal class Base : IBaseRepository, IBaseQuery
+    internal class Base : IBaseRepository
     {
         private readonly IRelationalConnectionFactory _conn;
 
@@ -126,6 +126,27 @@ namespace TradingBot.ORM.Base
             catch(Exception ex)
             {
                 return new MatterDapterResponse<IEnumerable<T>>(Array.Empty<T>(), ex);
+            }
+        }
+
+        public async Task<MatterDapterResponse<T>> RunQuerySingleAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(storeProcedure) && string.IsNullOrEmpty(sqlStatement))
+                {
+                    throw new ArgumentNullException(nameof(sqlStatement) + nameof(storeProcedure));
+                }
+
+                using IDbConnection connection = _conn.GetRelationConnection();
+
+                var result = await connection.QuerySingleAsync<T>(storeProcedure ?? sqlStatement , parameters);
+
+                return new MatterDapterResponse<T>(result);
+            }
+            catch(Exception ex)
+            {
+                return new MatterDapterResponse<T>(ex);
             }
         }
     }

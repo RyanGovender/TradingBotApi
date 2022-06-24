@@ -5,5 +5,6 @@ namespace TradingBot.ORM.Interfaces
     public interface IBaseQuery
     {
         Task<MatterDapterResponse<IEnumerable<T>>> RunQueryAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null);
+        Task<MatterDapterResponse<T>> RunQuerySingleAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null);
     }
 }
