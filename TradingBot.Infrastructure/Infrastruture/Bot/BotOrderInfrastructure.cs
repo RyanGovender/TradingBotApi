@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TradingBot.Infrastructure.Interfaces.Common;
+using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Objects.Bot;
+using TradingBot.Objects.Enum;
 using TradingBot.ORM.Interfaces;
 
 namespace TradingBot.Infrastructure.Infrastruture.Bot
 {
-    public class BotOrderInfrastructure : IRepository<BotOrder>
+    public class BotOrderInfrastructure : IBotOrder
     {
         private readonly IBaseRepository _baseRepo;
         public BotOrderInfrastructure(IBaseRepository baseRepository)
@@ -53,7 +52,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             var result = await _baseRepo
                 .RunQuerySingleAsync<dynamic>(sqlStatement: $"SELECT tv.\"TransactionAmount\", tv.\"TransactionTypeID\" FROM exchange.transaction tv " +
                 "inner join exchange.BotOrderTransactions bt " +
-                $"on tv.\"ID\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}'");
+                $"on tv.\"id\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}'");
             //get trading symbol using exchange ID
             var currentName = await _baseRepo
                 .RunQuerySingleAsync<string>(sqlStatement: $"SELECT \"Name\" FROM exchange.Exchange e where e.\"ID\" = '{botOrder.ExchangeID}'");
@@ -69,7 +68,8 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
                 OrderTypeID = botOrder.OrderTypeID,
                 PurchasePrice = result.Source.TransactionAmount,
                 Quantity = botOrder.Quantity,
-                IsFirstTrade = result?.Source is null
+                IsFirstTrade = result?.Source is null,
+                NextTradAction = result.Source.TransactionTypeID == 2 ? Trade.SELL : Trade.BUY
             };
 
            return botA;

@@ -19,4 +19,12 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TradingBot.Objects\TradingBot.Objects.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exchanges\Binance\Transactions\" />
+  </ItemGroup>
+
 </Project>

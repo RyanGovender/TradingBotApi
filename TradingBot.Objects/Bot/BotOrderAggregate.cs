@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingBot.Objects.Enum;
 
 namespace TradingBot.Objects.Bot
 {
@@ -16,5 +17,6 @@ namespace TradingBot.Objects.Bot
         public decimal Quantity { get; set; }
         public bool IsFirstTrade { get; set; }
         public bool IsActive { get; set; }
+        public Trade NextTradAction { get; set; } = Trade.HOLD;
     }
 }

@@ -1,8 +1,11 @@
 using TradingBot.Api.Services;
 using TradingBot.Domain.Extensions;
 using TradingBot.Infrastructure.Infrastruture.Bot;
+using TradingBot.Infrastructure.Infrastruture.Transaction;
+using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Infrastructure.Interfaces.Common;
 using TradingBot.Objects.Bot;
+using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Extension;
 using TradingBot.ORM.Interfaces;
 
@@ -18,7 +21,8 @@ builder.Services.AddOrmHelper();
 builder.Services.RunBotTrader();
 //move these to extension later on
 
-builder.Services.AddSingleton<IRepository<BotOrder>, BotOrderInfrastructure>();
+builder.Services.AddSingleton<IBotOrder, BotOrderInfrastructure>();
+builder.Services.AddSingleton<IRepository<Transactions>, TransactionInfrastruture>();
 
 builder.Services.AddHostedService<BotService>();
 

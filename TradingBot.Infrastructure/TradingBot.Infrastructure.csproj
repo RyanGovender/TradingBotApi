@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Infrastruture\Common\" />
+    <Folder Include="Interfaces\Transaction\" />
   </ItemGroup>
 
   <ItemGroup>

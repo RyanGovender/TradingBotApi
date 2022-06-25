@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TradingBot.Domain.Enum;
 using TradingBot.Domain.Factories.TradingFactory;
+using TradingBot.Objects.Enum;
 
 namespace TradingBot.Domain.Strategies
 {
@@ -27,11 +27,13 @@ namespace TradingBot.Domain.Strategies
 
             decimal precentageDiff = (currentPrice - purchasePrice) / purchasePrice * 100;
 
+            if (precentageDiff >= PROFIT_THRESHOLD || precentageDiff <= STOP_LOSS_THRESHOLD)
+                return Trade.SELL;
+
             if (precentageDiff >= UPWARD_TREND_THRESHOLD || precentageDiff <= DIP_THRESHOLD)
                 return Trade.BUY;
-            else if (precentageDiff >= PROFIT_THRESHOLD || precentageDiff <= STOP_LOSS_THRESHOLD)
-                return Trade.SELL;
-            else
+          
+            
                 return Trade.HOLD;
         }
     }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TradingBot.Domain.Factories.TradingFactory;
 using TradingBot.Domain.Interfaces.Account;
 using TradingBot.Domain.Interfaces.Market;
+using TradingBot.Objects.Enum;
 
 namespace TradingBot.Domain.Services
 {
@@ -43,18 +44,18 @@ namespace TradingBot.Domain.Services
                 }
 
                 var nextOperation = _tradFactory
-                    .RunFactory(Enum.TradeStrategy.SIMPLE_TRADE, new Objects.MarketData { MarketId = tradingSymbol, CurrentPrice = currentPrice, PurchasePrice = lastOpPrice });
+                    .RunFactory(TradeStrategy.SIMPLE_TRADE, new Objects.MarketData { MarketId = tradingSymbol, CurrentPrice = currentPrice, PurchasePrice = lastOpPrice });
 
                 switch (nextOperation)
                 {
-                    case Enum.Trade.BUY:
+                    case Trade.BUY:
                         lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
                         break;
-                    case Enum.Trade.SELL:
+                    case Trade.SELL:
                         lastOpPrice = await _market.PlaceSellOrder(tradingSymbol);
                         isFristTrade = true;
                         break;
-                    case Enum.Trade.HOLD:
+                    case Trade.HOLD:
                         _logger.LogDebug("{0} is holding : current Value {1}",tradingSymbol, currentPrice);
                         continue;
                 }
