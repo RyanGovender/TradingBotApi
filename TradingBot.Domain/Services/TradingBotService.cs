@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using TradingBot.Domain.Factories.TradingFactory;
 using TradingBot.Domain.Interfaces.Account;
 using TradingBot.Domain.Interfaces.Market;
-using TradingBot.Objects.Enum;
+using TradingBot.Objects.Enums;
 
 namespace TradingBot.Domain.Services
 {

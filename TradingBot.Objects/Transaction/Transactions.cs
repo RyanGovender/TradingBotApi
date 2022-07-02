@@ -12,19 +12,18 @@ namespace TradingBot.Objects.Transaction
     public class Transactions
     {
         public Guid TransactionID { get; private set; } = Guid.NewGuid();
-        public int TransactionTypeID { get; private set; }
+        public int TransactionTypeID { get; set; }
         public decimal TransactionAmount { get; set; }
         public decimal OpeningBalance { get; private set; }
         public DateTime TransactionDate { get; private set; } = DateTime.UtcNow;
         public Guid UserID { get; set; }
         public Guid ExchangeID { get; set;}
 
-        public Transactions(TransactionType transactionType, decimal transactionAmount, decimal openingBalance, DateTime transactionDate, Guid userID, Guid exchangeID)
+        public Transactions(TransactionType transactionType, decimal transactionAmount, Guid userID, Guid exchangeID)
         {
             TransactionTypeID = transactionType.GetIntValue(out int value) ? value : throw new Exception("Transaction Type not found");
             TransactionAmount = transactionAmount;
-            OpeningBalance = openingBalance;
-            TransactionDate = transactionDate;
+            OpeningBalance = 0.0m;
             UserID = userID;
             ExchangeID = exchangeID;
         }

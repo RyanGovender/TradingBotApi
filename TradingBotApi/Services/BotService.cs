@@ -54,7 +54,7 @@ namespace TradingBot.Api.Services
                 {
                     var buyPrice = await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                     await _transaction
-                               .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = buyPrice, TransactionTypeID = 2, UserID = resultbot.UserID });
+                               .InsertAsync(new Transactions(TransactionType.BUY, buyPrice, resultbot.UserID, resultbot.ExchangeID));
                 }
 
                 var nextOperation = _tradFactory
@@ -65,13 +65,13 @@ namespace TradingBot.Api.Services
                         case Trade.BUY:
                             var buyPrice = await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                             await _transaction
-                                .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = buyPrice, TransactionTypeID = 2, UserID = resultbot.UserID });
-                            break;
+                                .InsertAsync(new Transactions(TransactionType.BUY, buyPrice, resultbot.UserID, resultbot.ExchangeID));
+                        break;
                         case Trade.SELL:
                             var sellPrice = await _market.PlaceSellOrder(botAggregate.TradingSymbol);
                             await _transaction
-                                .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = sellPrice, TransactionTypeID = 1, UserID = resultbot.UserID });
-                            break;
+                              .InsertAsync(new Transactions(TransactionType.SELL, sellPrice, resultbot.UserID, resultbot.ExchangeID));
+                        break;
                         case Trade.HOLD:
                             _logger.LogDebug("{0} is holding : current Value {1}", botAggregate.TradingSymbol, currentPrice);
                             continue;
