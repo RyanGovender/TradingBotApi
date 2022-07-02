@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TradingBot.Objects.Enum;
+using TradingBot.Objects.Enums;
 
 namespace TradingBot.Objects.Bot
 {

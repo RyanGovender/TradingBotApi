@@ -77,13 +77,7 @@ namespace TradingBot.ORM.Base
 
                 var result = await connection.InsertAsync(data).ConfigureAwait(false);
 
-                if (result == 0)
-                {
-                    return new MatterDapterResponse<T>(false);
-                }
-
                 return new MatterDapterResponse<T>(result, true, "Success");
-
             }
             catch (Exception ex)
             {

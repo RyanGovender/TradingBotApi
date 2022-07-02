@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Objects.Bot;
-using TradingBot.Objects.Enum;
+using TradingBot.Objects.Enums;
 using TradingBot.ORM.Interfaces;
 
 namespace TradingBot.Infrastructure.Infrastruture.Bot
@@ -52,7 +52,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             var result = await _baseRepo
                 .RunQuerySingleAsync<dynamic>(sqlStatement: $"SELECT tv.\"TransactionAmount\", tv.\"TransactionTypeID\" FROM exchange.transaction tv " +
                 "inner join exchange.BotOrderTransactions bt " +
-                $"on tv.\"id\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}'");
+                $"on tv.\"TransactionID\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}' ORDER BY bt.\"ID\" DESC LIMIT 1");
             //get trading symbol using exchange ID
             var currentName = await _baseRepo
                 .RunQuerySingleAsync<string>(sqlStatement: $"SELECT \"Name\" FROM exchange.Exchange e where e.\"ID\" = '{botOrder.ExchangeID}'");

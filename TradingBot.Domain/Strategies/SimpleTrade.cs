@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Domain.Factories.TradingFactory;
-using TradingBot.Objects.Enum;
+using TradingBot.Domain.Objects;
+using TradingBot.Objects.Enums;
 
 namespace TradingBot.Domain.Strategies
 {
@@ -20,20 +21,19 @@ namespace TradingBot.Domain.Strategies
 
         public TradeStrategy TradeStrategy => TradeStrategy.SIMPLE_TRADE;
 
-        public Trade TradeStategy(decimal currentPrice, decimal purchasePrice)
+        public Trade TradeStategy(MarketData marketData!!)
         {
-            if (purchasePrice <= 0)
+            if (marketData.PurchasePrice <= 0)
                 return Trade.BUY;
 
-            decimal precentageDiff = (currentPrice - purchasePrice) / purchasePrice * 100;
+            decimal precentageDiff = (marketData.CurrentPrice - marketData.PurchasePrice) / marketData.PurchasePrice * 100;
 
-            if (precentageDiff >= PROFIT_THRESHOLD || precentageDiff <= STOP_LOSS_THRESHOLD)
+            if (marketData.NextAction is Trade.BUY && precentageDiff >= UPWARD_TREND_THRESHOLD || precentageDiff <= DIP_THRESHOLD)
+                return Trade.BUY;
+
+            if (marketData.NextAction is Trade.SELL && precentageDiff >= PROFIT_THRESHOLD || precentageDiff <= STOP_LOSS_THRESHOLD)
                 return Trade.SELL;
-
-            if (precentageDiff >= UPWARD_TREND_THRESHOLD || precentageDiff <= DIP_THRESHOLD)
-                return Trade.BUY;
           
-            
                 return Trade.HOLD;
         }
     }

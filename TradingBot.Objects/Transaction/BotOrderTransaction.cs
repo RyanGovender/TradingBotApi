@@ -1,5 +1,8 @@
-﻿namespace TradingBot.Objects.Transaction
-{ 
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TradingBot.Objects.Transaction
+{
+    [Table(name:"botordertransactions")]
     public class BotOrderTransactions
     {
         public Guid BotOrderID { get; set; }

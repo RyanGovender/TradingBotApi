@@ -6,7 +6,7 @@ using TradingBot.Domain.Services;
 using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Infrastructure.Interfaces.Common;
 using TradingBot.Objects.Bot;
-using TradingBot.Objects.Enum;
+using TradingBot.Objects.Enums;
 using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Interfaces;
 
@@ -39,46 +39,43 @@ namespace TradingBot.Api.Services
         {
             var botOrder = await _botOrder.GetAllAsync();
             var resultbot = botOrder.FirstOrDefault();
-            var botAggregate = await _botOrder.GetBotOrderAggregate(resultbot);
-
             bool runBot = true;
-            decimal lastOpPrice = botAggregate.PurchasePrice;
-            string tradingSymbol = botAggregate.TradingSymbol;
-            bool isFristTrade = botAggregate.IsFirstTrade;
 
             while (runBot)
             {
-                decimal currentPrice = await _market.GetMarketPrice(tradingSymbol);
+                var botAggregate = await _botOrder.GetBotOrderAggregate(resultbot);
+               // decimal lastOpPrice = botAggregate.PurchasePrice;
+               // string tradingSymbol = botAggregate.TradingSymbol;
+               //bool isFristTrade = botAggregate.IsFirstTrade;
 
-                if (isFristTrade)
+                decimal currentPrice = await _market.GetMarketPrice(botAggregate.TradingSymbol);
+
+                if (botAggregate.IsFirstTrade)
                 {
-                    lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
-                    isFristTrade = false;
+                    var buyPrice = await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
+                    await _transaction
+                               .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = buyPrice, TransactionTypeID = 2, UserID = resultbot.UserID });
                 }
 
                 var nextOperation = _tradFactory
-                    .RunFactory(TradeStrategy.SIMPLE_TRADE, new MarketData { MarketId = tradingSymbol, CurrentPrice = currentPrice, PurchasePrice = lastOpPrice });
+                    .RunFactory(TradeStrategy.SIMPLE_TRADE, new MarketData { MarketId = botAggregate.TradingSymbol, CurrentPrice = currentPrice, PurchasePrice = botAggregate.PurchasePrice, NextAction = botAggregate.NextTradAction });
 
-                if(nextOperation == botAggregate.NextTradAction)
-                {
-                    switch (nextOperation)
+                switch (nextOperation)
                     {
                         case Trade.BUY:
-                            lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
+                            var buyPrice = await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                             await _transaction
-                                .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = lastOpPrice, TransactionTypeID = 2, UserID = resultbot.UserID });
+                                .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = buyPrice, TransactionTypeID = 2, UserID = resultbot.UserID });
                             break;
                         case Trade.SELL:
-                            lastOpPrice = await _market.PlaceSellOrder(tradingSymbol);
+                            var sellPrice = await _market.PlaceSellOrder(botAggregate.TradingSymbol);
                             await _transaction
-                                .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = lastOpPrice, TransactionTypeID = 1, UserID = resultbot.UserID });
-                            isFristTrade = true;
+                                .InsertAsync(new Transactions { ExchangeID = resultbot.ExchangeID, OpeningBalance = .0m, TransactionAmount = sellPrice, TransactionTypeID = 1, UserID = resultbot.UserID });
                             break;
                         case Trade.HOLD:
-                            _logger.LogDebug("{0} is holding : current Value {1}", tradingSymbol, currentPrice);
+                            _logger.LogDebug("{0} is holding : current Value {1}", botAggregate.TradingSymbol, currentPrice);
                             continue;
                     }
-                }
               
                 await Task.Delay(1000, cancellationToken);
             }

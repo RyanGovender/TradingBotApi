@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingBot.Domain.Objects;
 using TradingBot.Domain.Strategies;
-using TradingBot.Objects.Enum;
+using TradingBot.Objects.Enums;
 
 namespace TradingBot.Domain.Factories.TradingFactory
 {
@@ -24,7 +24,7 @@ namespace TradingBot.Domain.Factories.TradingFactory
 
             if (!getTradeFunction || tradeStrategyProcess is null) return Trade.UNKNOWN;
 
-            var result = tradeStrategyProcess.TradeStategy(marketData.CurrentPrice,marketData.PurchasePrice);
+            var result = tradeStrategyProcess.TradeStategy(marketData);
 
             return result;
         }
