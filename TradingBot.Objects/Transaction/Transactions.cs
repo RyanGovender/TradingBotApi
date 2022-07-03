@@ -21,7 +21,7 @@ namespace TradingBot.Objects.Transaction
 
         public Transactions(TransactionType transactionType, decimal transactionAmount, Guid userID, Guid exchangeID)
         {
-            TransactionTypeID = transactionType.GetIntValue(out int value) ? value : throw new Exception("Transaction Type not found");
+            TransactionTypeID = (int)transactionType; //? value : throw new Exception("Transaction Type not found");
             TransactionAmount = transactionAmount;
             OpeningBalance = 0.0m;
             UserID = userID;

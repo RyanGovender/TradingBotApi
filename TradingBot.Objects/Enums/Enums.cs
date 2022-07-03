@@ -8,13 +8,15 @@ namespace TradingBot.Objects.Enums
 {
         public enum Trade
         {
-            SELL = 0,
-            BUY = 1,
+            BUY = 0,
+            SELL = 1,
             HOLD = 2,
             UNKNOWN = 3
-        }
-        
-        public enum TransactionType
+    }
+
+    public enum Status { }
+
+    public enum TransactionType
         {
             SELL = 1,
             BUY = 2
@@ -27,11 +29,11 @@ namespace TradingBot.Objects.Enums
 
     public static class EnumExtension
     {
-        public static int GetIntValue<TEnum>(this TEnum enums) where TEnum : struct
+        public static int GetIntValue<TEnum>(this TEnum enums) where TEnum : struct, Enum
         {
-            var isValueExistingEnum = Enum.TryParse(enums.ToString(), out int result);
+            int result = (int)enums.GetTypeCode();
 
-            return isValueExistingEnum ? result : default;
+            return result;
         }
 
         public static bool GetIntValue<TEnum>(this TEnum enums, out int value) where TEnum : struct

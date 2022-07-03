@@ -35,6 +35,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Transaction
         {
             var result = await _baseRepo.InsertAsync(data);
 
+            //will be removed
             if (result.IsSuccess)
             {
                var res =  await _baseRepo.InsertAsync(new BotOrderTransactions {BotOrderID = Guid.Parse("03fc7c7a-f600-4e12-9f77-659730c70dd4"), TransactionID = data.TransactionID });

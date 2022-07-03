@@ -7,6 +7,7 @@ using TradingBot.Domain.Exchanges.Binance.Common;
 using TradingBot.Domain.Interfaces.Market;
 using Binance.Net;
 using Binance.Net.Enums;
+using TradingBot.Objects.Order;
 
 namespace TradingBot.Domain.Exchanges.Binance.Market
 {
@@ -28,7 +29,25 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
 
             return assetPrice.Data.Price; 
         }
-        //refator later on
+
+        public async Task<dynamic> PlaceOrder(PlaceOrderData orderData)
+        {
+            var orderSide = (OrderSide)orderData.OrderSideId;
+            var spotOrderType = (SpotOrderType)orderData.OrderTypeId;
+
+            var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
+             .SpotApi.Trading.PlaceOrderAsync(orderData.CurrencySymbol, orderSide, spotOrderType, orderData.Quantity);
+
+            if (!placeBuyOrder.Success || placeBuyOrder.Data is null)
+            {
+                //log here
+                return new PlaceOrderReturn();
+            }
+
+            return placeBuyOrder.Data;
+        }
+
+        //refactor later on
         public async Task<decimal> PlaceBuyOrder(string currencySymbol)
         {
             var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
@@ -48,5 +67,6 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
 
             return placeBuyOrder.Data.Price;
         }
+
     }
 }

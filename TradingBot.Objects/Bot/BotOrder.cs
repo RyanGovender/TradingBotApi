@@ -13,6 +13,6 @@ namespace TradingBot.Objects.Bot
         public decimal Quantity { get; set; }
         public bool HasTimeFrame { get; set; }
         public bool IsActive { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }
