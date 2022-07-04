@@ -18,14 +18,16 @@ namespace TradingBot.Objects.Transaction
         public DateTime TransactionDate { get; private set; } = DateTime.UtcNow;
         public Guid UserID { get; set; }
         public Guid ExchangeID { get; set;}
+        public decimal Quantity { get; set; }
 
-        public Transactions(TransactionType transactionType, decimal transactionAmount, Guid userID, Guid exchangeID)
+        public Transactions(TransactionType transactionType, decimal transactionAmount, Guid userID, Guid exchangeID, decimal quantity)
         {
             TransactionTypeID = (int)transactionType; //? value : throw new Exception("Transaction Type not found");
             TransactionAmount = transactionAmount;
             OpeningBalance = 0.0m;
             UserID = userID;
             ExchangeID = exchangeID;
+            Quantity = quantity;
         }
     }
 }

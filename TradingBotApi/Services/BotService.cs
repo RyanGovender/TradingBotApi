@@ -7,6 +7,7 @@ using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Infrastructure.Interfaces.Common;
 using TradingBot.Objects.Bot;
 using TradingBot.Objects.Enums;
+using TradingBot.Objects.Order;
 using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Interfaces;
 
@@ -52,9 +53,10 @@ namespace TradingBot.Api.Services
 
                 if (botAggregate.IsFirstTrade)
                 {
-                    var buyPrice = await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
+                    var buyPrice = await _market.PlaceOrder(new PlaceOrderData
+                    { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity }); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                     await _transaction
-                               .InsertAsync(new Transactions(TransactionType.BUY, buyPrice, resultbot.UserID, resultbot.ExchangeID));
+                        .InsertAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
                 }
 
                 var nextOperation = _tradFactory
@@ -63,14 +65,16 @@ namespace TradingBot.Api.Services
                 switch (nextOperation)
                     {
                         case Trade.BUY:
-                            var buyPrice = await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
+                        var buyPrice = await _market.PlaceOrder(new PlaceOrderData 
+                        { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID,Quantity =botAggregate.Quantity}); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                             await _transaction
-                                .InsertAsync(new Transactions(TransactionType.BUY, buyPrice, resultbot.UserID, resultbot.ExchangeID));
+                                .InsertAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
                         break;
                         case Trade.SELL:
-                            var sellPrice = await _market.PlaceSellOrder(botAggregate.TradingSymbol);
-                            await _transaction
-                              .InsertAsync(new Transactions(TransactionType.SELL, sellPrice, resultbot.UserID, resultbot.ExchangeID));
+                        var sellPrice = await _market.PlaceOrder(new PlaceOrderData
+                        { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.SELL, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity });
+                        await _transaction
+                              .InsertAsync(new Transactions(TransactionType.SELL, sellPrice.Price, resultbot.UserID, resultbot.ExchangeID, sellPrice.QuantityFilled));
                         break;
                         case Trade.HOLD:
                             _logger.LogDebug("{0} is holding : current Value {1}", botAggregate.TradingSymbol, currentPrice);

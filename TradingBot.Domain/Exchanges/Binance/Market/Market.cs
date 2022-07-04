@@ -30,21 +30,23 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
             return assetPrice.Data.Price; 
         }
 
-        public async Task<dynamic> PlaceOrder(PlaceOrderData orderData)
+        public async Task<PlaceOrderReturn> PlaceOrder(PlaceOrderData orderData)
         {
             var orderSide = (OrderSide)orderData.OrderSideId;
             var spotOrderType = (SpotOrderType)orderData.OrderTypeId;
 
             var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
-             .SpotApi.Trading.PlaceOrderAsync(orderData.CurrencySymbol, orderSide, spotOrderType, orderData.Quantity);
+             .SpotApi.Trading.PlaceOrderAsync(orderData.CurrencySymbol, orderSide, spotOrderType, orderData.Quantity, orderResponseType: OrderResponseType.Full);
+            //time in force is something we should look at
 
             if (!placeBuyOrder.Success || placeBuyOrder.Data is null)
             {
                 //log here
-                return new PlaceOrderReturn();
+                return new PlaceOrderReturn(placeBuyOrder.Error.Message, placeBuyOrder.Error.Code, placeBuyOrder.Error.Data);
             }
 
-            return placeBuyOrder.Data;
+            return new PlaceOrderReturn(placeBuyOrder.Data.Id, (int)placeBuyOrder.Data.Status, placeBuyOrder.Data.AverageFillPrice,
+                placeBuyOrder.Data.CreateTime, placeBuyOrder.Data.Price, placeBuyOrder.Data.Quantity, placeBuyOrder.Data.QuantityFilled, placeBuyOrder.Data.StopPrice);
         }
 
         //refactor later on

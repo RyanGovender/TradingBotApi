@@ -12,7 +12,7 @@ namespace TradingBot.Objects.Order
     {
         public long Id { get; set; }
         public Status Status { get; set; }
-        public decimal AverageFillPrice { get; set; }
+        public decimal? AverageFillPrice { get; set; }
         public DateTime OrderTime { get; set; }
         public decimal Price { get; set; }
         public decimal RequestedQuantity { get; set; }
@@ -21,14 +21,22 @@ namespace TradingBot.Objects.Order
         public Error? Error { get; set; }
         public bool IsSuccess => Error == null;
 
-        public PlaceOrderReturn()
+        public PlaceOrderReturn(long id, int StatusId, decimal? averageFillPrice, DateTime orderTime, decimal price,
+            decimal requestedQuantity, decimal quantityFilled, decimal? stopPrice)
         {
-
+            Id = id;
+            Status = (Status)StatusId;
+            AverageFillPrice = averageFillPrice;
+            OrderTime = orderTime;
+            Price = price;
+            RequestedQuantity = requestedQuantity;
+            QuantityFilled = quantityFilled;
+            StopPrice = stopPrice;
         }
 
-        public PlaceOrderReturn(long id)
+        public PlaceOrderReturn(string message, int? code, object data)
         {
-
+            Error = new Error(message, code, data);
         }
     }
 }
