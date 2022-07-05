@@ -22,8 +22,11 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
 
         public async Task<decimal> GetMarketPrice(string currencySymbol)
         {
+            var assetPriceBOOK = await _binanceConnection.CreateBinanceClient()
+                .SpotApi.ExchangeData.GetBookPriceAsync(currencySymbol);
+
             var assetPrice = await _binanceConnection.CreateBinanceClient()
-                .SpotApi.ExchangeData.GetPriceAsync(currencySymbol);
+               .SpotApi.ExchangeData.GetPriceAsync(currencySymbol);
 
             if (!assetPrice.Success || assetPrice.Data is null) return 0;
 
@@ -33,10 +36,10 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
         public async Task<PlaceOrderReturn> PlaceOrder(PlaceOrderData orderData)
         {
             var orderSide = (OrderSide)orderData.OrderSideId;
-            var spotOrderType = (SpotOrderType)orderData.OrderTypeId;
+            var spotOrderType =     SpotOrderType.Market;//)orderData.OrderTypeId;
 
             var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
-             .SpotApi.Trading.PlaceOrderAsync(orderData.CurrencySymbol, orderSide, spotOrderType, orderData.Quantity, orderResponseType: OrderResponseType.Full);
+             .SpotApi.Trading.PlaceOrderAsync(orderData.CurrencySymbol, orderSide, spotOrderType, orderData.Quantity);
             //time in force is something we should look at
 
             if (!placeBuyOrder.Success || placeBuyOrder.Data is null)
@@ -47,6 +50,14 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
 
             return new PlaceOrderReturn(placeBuyOrder.Data.Id, (int)placeBuyOrder.Data.Status, placeBuyOrder.Data.AverageFillPrice,
                 placeBuyOrder.Data.CreateTime, placeBuyOrder.Data.Price, placeBuyOrder.Data.Quantity, placeBuyOrder.Data.QuantityFilled, placeBuyOrder.Data.StopPrice);
+        }
+
+        public async Task<dynamic> GetAllOrders(string symbol)
+        {
+            var getAllOrders = await _binanceConnection
+                .CreateBinanceClient().SpotApi.Trading.GetOrdersAsync(symbol);
+
+            return getAllOrders.Data;
         }
 
         //refactor later on

@@ -28,10 +28,10 @@ namespace TradingBot.Domain.Strategies
 
             decimal precentageDiff = (marketData.CurrentPrice - marketData.PurchasePrice) / marketData.PurchasePrice * 100;
 
-            if (marketData.NextAction is Trade.BUY && precentageDiff >= UPWARD_TREND_THRESHOLD || precentageDiff <= DIP_THRESHOLD)
+            if (marketData.NextAction is Trade.BUY && (precentageDiff >= UPWARD_TREND_THRESHOLD || precentageDiff <= DIP_THRESHOLD))
                 return Trade.BUY;
 
-            if (marketData.NextAction is Trade.SELL && precentageDiff >= PROFIT_THRESHOLD || precentageDiff <= STOP_LOSS_THRESHOLD)
+            if (marketData.NextAction is Trade.SELL && (precentageDiff >= PROFIT_THRESHOLD || precentageDiff <= STOP_LOSS_THRESHOLD))
                 return Trade.SELL;
           
                 return Trade.HOLD;

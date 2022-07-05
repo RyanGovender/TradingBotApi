@@ -13,10 +13,10 @@ namespace TradingBot.Objects.Bot
         public int TradeStrategyID { get; set; }
         public int OrderTypeID { get; set; }
         public string TradingSymbol { get; set; } = string.Empty;
-        public decimal PurchasePrice { get; set; }
-        public decimal Quantity { get; set; }
-        public bool IsFirstTrade { get; set; }
+        public decimal PurchasePrice { get; set; } = decimal.Zero;
+        public decimal Quantity { get; set; } = decimal.Zero;
         public bool IsActive { get; set; }
         public Trade NextTradAction { get; set; } = Trade.HOLD;
+        public bool IsFirstTrade { get; set; } = false;
     }
 }

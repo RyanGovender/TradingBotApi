@@ -39,7 +39,7 @@ namespace TradingBot.Api.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var botOrder = await _botOrder.GetAllAsync();
-            var resultbot = botOrder.FirstOrDefault();
+            var resultbot = botOrder.FirstOrDefault(X=>X.ID == Guid.Parse("03fc7c7a-f600-4e12-9f77-659730c70dd4"));
             bool runBot = true;
 
             while (runBot)
@@ -50,11 +50,12 @@ namespace TradingBot.Api.Services
                //bool isFristTrade = botAggregate.IsFirstTrade;
 
                 decimal currentPrice = await _market.GetMarketPrice(botAggregate.TradingSymbol);
+                
 
                 if (botAggregate.IsFirstTrade)
                 {
                     var buyPrice = await _market.PlaceOrder(new PlaceOrderData
-                    { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity }); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
+                    { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity, Price = currentPrice }); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                     await _transaction
                         .InsertAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
                 }

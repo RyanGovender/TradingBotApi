@@ -9,6 +9,7 @@ namespace TradingBot.Domain.Interfaces.Market
 {
     public interface IMarket
     {
+        Task<dynamic> GetAllOrders(string symbol);
         Task<decimal> GetMarketPrice(string currencySymbol);
         Task<PlaceOrderReturn> PlaceOrder(PlaceOrderData orderData);
         Task<decimal> PlaceSellOrder(string currencySymbol);

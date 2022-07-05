@@ -59,6 +59,9 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
 
             //TransactionTypeID
 
+            Trade nextTradeAction = result?.Source is null ? Trade.BUY :
+                result.Source?.TransactionTypeID == (int)TransactionType.BUY ? Trade.SELL : Trade.BUY;
+
             var botA = new BotOrderAggregate()
             {
                 BotOrderID = botOrder.ID,
@@ -66,10 +69,10 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
                 IsActive = botOrder.IsActive,
                 TradingSymbol = currentName?.Source,
                 OrderTypeID = botOrder.OrderTypeID,
-                PurchasePrice = result.Source.TransactionAmount,
+                PurchasePrice = result?.Source?.TransactionAmount ?? decimal.Zero,
                 Quantity = botOrder.Quantity,
                 IsFirstTrade = result?.Source is null,
-                NextTradAction = result.Source.TransactionTypeID == 2 ? Trade.SELL : Trade.BUY
+                NextTradAction = nextTradeAction
             };
 
            return botA;
