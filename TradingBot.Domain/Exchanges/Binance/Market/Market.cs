@@ -23,7 +23,7 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
         public async Task<decimal> GetMarketPrice(string currencySymbol)
         {
             var assetPriceBOOK = await _binanceConnection.CreateBinanceClient()
-                .SpotApi.ExchangeData.GetBookPriceAsync(currencySymbol);
+                .SpotApi.ExchangeData.GetCurrentAvgPriceAsync(currencySymbol);
 
             var assetPrice = await _binanceConnection.CreateBinanceClient()
                .SpotApi.ExchangeData.GetPriceAsync(currencySymbol);
@@ -36,7 +36,7 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
         public async Task<PlaceOrderReturn> PlaceOrder(PlaceOrderData orderData)
         {
             var orderSide = (OrderSide)orderData.OrderSideId;
-            var spotOrderType =     SpotOrderType.Market;//)orderData.OrderTypeId;
+            var spotOrderType =  (SpotOrderType)orderData.OrderTypeId;
 
             var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
              .SpotApi.Trading.PlaceOrderAsync(orderData.CurrencySymbol, orderSide, spotOrderType, orderData.Quantity);

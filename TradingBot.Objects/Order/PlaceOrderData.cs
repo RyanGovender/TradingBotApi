@@ -14,7 +14,7 @@ namespace TradingBot.Objects.Order
         public string CurrencySymbol { get; set; }
         public int OrderSideId { get; set; }
         public int OrderTypeId { get; set; }
-        public decimal Quantity { get; set; }
+        public decimal Quantity { get; set; } = 0.0000M;
         public decimal? Price { get; set; }
         public decimal? StopPrice { get; set; }
     }

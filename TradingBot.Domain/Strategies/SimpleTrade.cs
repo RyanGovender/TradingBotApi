@@ -12,12 +12,12 @@ namespace TradingBot.Domain.Strategies
     internal class SimpleTrade : ITradeStrategy
     {
         //Sell thresholds(if in buy state)
-        protected const decimal PROFIT_THRESHOLD = .5m;
+        protected const decimal PROFIT_THRESHOLD = .20m;
         protected const decimal STOP_LOSS_THRESHOLD = -2.25m;
 
         //Buy thresholds(if the bot is in Sell state)
-        protected const decimal DIP_THRESHOLD = -2.25m;
-        protected const decimal UPWARD_TREND_THRESHOLD = 1.25m;
+        protected const decimal DIP_THRESHOLD = -2.00m;
+        protected const decimal UPWARD_TREND_THRESHOLD = .50m;
 
         public TradeStrategy TradeStrategy => TradeStrategy.SIMPLE_TRADE;
 
@@ -26,6 +26,7 @@ namespace TradingBot.Domain.Strategies
             if (marketData.PurchasePrice <= 0)
                 return Trade.BUY;
 
+            decimal testPercentage = (marketData.CurrentPrice / marketData.PurchasePrice) * 100;
             decimal precentageDiff = (marketData.CurrentPrice - marketData.PurchasePrice) / marketData.PurchasePrice * 100;
 
             if (marketData.NextAction is Trade.BUY && (precentageDiff >= UPWARD_TREND_THRESHOLD || precentageDiff <= DIP_THRESHOLD))

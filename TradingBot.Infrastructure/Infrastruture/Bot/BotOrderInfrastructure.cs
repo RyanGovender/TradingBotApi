@@ -50,7 +50,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             //check if first trade
             // get last price from transactions using last buy transaction type
             var result = await _baseRepo
-                .RunQuerySingleAsync<dynamic>(sqlStatement: $"SELECT tv.\"TransactionAmount\", tv.\"TransactionTypeID\" FROM exchange.transaction tv " +
+                .RunQuerySingleAsync<dynamic>(sqlStatement: $"SELECT tv.\"TransactionAmount\", tv.\"TransactionTypeID\", tv.\"Quantity\" FROM exchange.transaction tv " +
                 "inner join exchange.BotOrderTransactions bt " +
                 $"on tv.\"TransactionID\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}' ORDER BY bt.\"ID\" DESC LIMIT 1");
             //get trading symbol using exchange ID
@@ -62,6 +62,8 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             Trade nextTradeAction = result?.Source is null ? Trade.BUY :
                 result.Source?.TransactionTypeID == (int)TransactionType.BUY ? Trade.SELL : Trade.BUY;
 
+            decimal quantity = result?.Source is null ? botOrder.Quantity : result?.Source?.Quantity;
+
             var botA = new BotOrderAggregate()
             {
                 BotOrderID = botOrder.ID,
@@ -69,8 +71,8 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
                 IsActive = botOrder.IsActive,
                 TradingSymbol = currentName?.Source,
                 OrderTypeID = botOrder.OrderTypeID,
-                PurchasePrice = result?.Source?.TransactionAmount ?? decimal.Zero,
-                Quantity = botOrder.Quantity,
+                TransactionAmount = result?.Source?.TransactionAmount ?? decimal.Zero,
+                Quantity = decimal.Round(quantity,4),
                 IsFirstTrade = result?.Source is null,
                 NextTradAction = nextTradeAction
             };

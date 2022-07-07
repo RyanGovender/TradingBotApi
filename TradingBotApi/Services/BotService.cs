@@ -39,50 +39,57 @@ namespace TradingBot.Api.Services
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var botOrder = await _botOrder.GetAllAsync();
-            var resultbot = botOrder.FirstOrDefault(X=>X.ID == Guid.Parse("03fc7c7a-f600-4e12-9f77-659730c70dd4"));
-            bool runBot = true;
+            var resultbot = botOrder.FirstOrDefault(X=>X.ID == Guid.Parse("12cb01e5-ecf8-4094-be3f-cc7cdb54a609"));
+            bool runBot = false;
+            //var sellPriceS = await _market.PlaceOrder(new PlaceOrderData
+            //{ CurrencySymbol = "BTCBUSD", OrderSideId = (int)Trade.SELL, OrderTypeId = 1, Quantity = 1.0m });
 
             while (runBot)
             {
                 var botAggregate = await _botOrder.GetBotOrderAggregate(resultbot);
-               // decimal lastOpPrice = botAggregate.PurchasePrice;
-               // string tradingSymbol = botAggregate.TradingSymbol;
-               //bool isFristTrade = botAggregate.IsFirstTrade;
-
                 decimal currentPrice = await _market.GetMarketPrice(botAggregate.TradingSymbol);
-                
+
 
                 if (botAggregate.IsFirstTrade)
                 {
                     var buyPrice = await _market.PlaceOrder(new PlaceOrderData
                     { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity, Price = currentPrice }); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
-                    await _transaction
+                    if(buyPrice.IsSuccess) 
+                        await _transaction
                         .InsertAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
+                    continue;
                 }
 
+                botAggregate.Quantity = botAggregate.NextTradAction == Trade.BUY ?
+                  decimal.Round((botAggregate.TransactionAmount / currentPrice) * botAggregate.Quantity, 4) :
+                  botAggregate.Quantity;
+
                 var nextOperation = _tradFactory
-                    .RunFactory(TradeStrategy.SIMPLE_TRADE, new MarketData { MarketId = botAggregate.TradingSymbol, CurrentPrice = currentPrice, PurchasePrice = botAggregate.PurchasePrice, NextAction = botAggregate.NextTradAction });
+                    .RunFactory(TradeStrategy.SIMPLE_TRADE, new MarketData { MarketId = botAggregate.TradingSymbol, CurrentPrice = currentPrice, PurchasePrice = botAggregate.TransactionAmount, NextAction = botAggregate.NextTradAction });
 
                 switch (nextOperation)
                     {
                         case Trade.BUY:
                         var buyPrice = await _market.PlaceOrder(new PlaceOrderData 
                         { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID,Quantity =botAggregate.Quantity}); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
+                        if (buyPrice.IsSuccess)
                             await _transaction
                                 .InsertAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
                         break;
                         case Trade.SELL:
                         var sellPrice = await _market.PlaceOrder(new PlaceOrderData
                         { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.SELL, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity });
-                        await _transaction
+                        if (sellPrice.IsSuccess)
+                            await _transaction
                               .InsertAsync(new Transactions(TransactionType.SELL, sellPrice.Price, resultbot.UserID, resultbot.ExchangeID, sellPrice.QuantityFilled));
                         break;
                         case Trade.HOLD:
                             _logger.LogDebug("{0} is holding : current Value {1}", botAggregate.TradingSymbol, currentPrice);
-                            continue;
+                        break;
+                            //continue;
                     }
               
-                await Task.Delay(1000, cancellationToken);
+                await Task.Delay(10000, cancellationToken);
             }
         }
 
