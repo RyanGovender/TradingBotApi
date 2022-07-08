@@ -9,38 +9,30 @@ namespace TradingBot.ORM.Objects
     public class MatterDapterResponse<T>
     {
         public object? Id { get; set; }
-        public bool IsSuccess { get; init; }
         public string? Message { get; init; }
         public T? Source { get; init; }
         public Exception? Exception { get; init; }
+        public bool IsSuccess => Exception == null;
 
         public MatterDapterResponse()
         {
 
         }
 
-        public MatterDapterResponse(object id, bool isSucess = true, string? message = null)
+        public MatterDapterResponse(object id, string? message = null)
         {
             Id = id;
-            IsSuccess = isSucess;
             Message = message;
         }
 
-        public MatterDapterResponse(bool isSuccess)
-        {
-            IsSuccess = isSuccess;
-        }
 
-
-        public MatterDapterResponse(T data, bool sucess = true)
+        public MatterDapterResponse(T data)
         {
-            IsSuccess = sucess;
             Source = data;
         }
 
         public MatterDapterResponse(T data, Exception exception)
         {
-            IsSuccess = false;
             Message = exception.Message;
             Source = data;
             Exception = exception;
@@ -48,7 +40,6 @@ namespace TradingBot.ORM.Objects
 
         public MatterDapterResponse(Exception exception)
         {
-            IsSuccess = false;
             Message = exception.Message;
             Exception = exception;
         }

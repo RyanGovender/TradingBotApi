@@ -15,8 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Infrastruture\Common\" />
     <Folder Include="Interfaces\Transaction\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>

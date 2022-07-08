@@ -1,48 +1,23 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TradingBot.Infrastructure.Infrastruture.Common;
 using TradingBot.Infrastructure.Interfaces.Bot;
+using TradingBot.Infrastructure.Interfaces.Common;
 using TradingBot.Objects.Bot;
 using TradingBot.Objects.Enums;
 using TradingBot.ORM.Interfaces;
 
 namespace TradingBot.Infrastructure.Infrastruture.Bot
 {
-    public class BotOrderInfrastructure : IBotOrder
+    public class BotOrderInfrastructure : BaseRepository<BotOrder>, IRepository<BotOrder>, IBotOrder
     {
         private readonly IBaseRepository _baseRepo;
-        public BotOrderInfrastructure(IBaseRepository baseRepository)
+       
+        public BotOrderInfrastructure(IBaseRepository baseRepository, ILogger<BotOrder> logger) : base(baseRepository, logger)
         {
             _baseRepo = baseRepository;
-        }
-
-        public Task<bool> DeleteAsync(BotOrder entityToDelete)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<BotOrder> FindAsync(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<BotOrder>> GetAllAsync()
-        {
-            var result = await _baseRepo.GetAllAsync<BotOrder>();
-
-            if(!result.IsSuccess || result?.Source is null) return Enumerable.Empty<BotOrder>();
-
-            return result.Source;
-        }
-
-        public Task<BotOrder> InsertAsync(BotOrder data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<BotOrder> UpdateAsync(BotOrder data)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder!!)

@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TradingBot.Objects.Enums
+﻿namespace TradingBot.Objects.Enums
 {
-        public enum Trade
+    public enum Trade
         {
             BUY = 0,
             SELL = 1,
             HOLD = 2,
             UNKNOWN = 3
-    }
+        }
 
     public enum Status { }
 
@@ -22,10 +16,17 @@ namespace TradingBot.Objects.Enums
             BUY = 2
         }
 
-        public enum TradeStrategy
+    public enum TradeStrategy
         {
             SIMPLE_TRADE = 1
         }
+
+    public enum Result
+    {
+        SUCCESSFUL = 0,
+        FAILED = 1,
+        ERROR = 2
+    }
 
     public static class EnumExtension
     {
