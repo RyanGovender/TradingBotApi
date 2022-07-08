@@ -1,12 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TradingBot.Infrastructure.Infrastruture.Common;
 using TradingBot.Infrastructure.Interfaces.Common;
-using TradingBot.Objects.Enums;
 using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Interfaces;
 
@@ -14,7 +8,8 @@ namespace TradingBot.Infrastructure.Infrastruture.Transaction
 {
     public class TransactionInfrastruture : BaseRepository<Transactions>, IRepository<Transactions>
     {
-        public TransactionInfrastruture(IBaseRepository baseRepository, ILogger<Transactions> logger) : base(baseRepository, logger)
+        public TransactionInfrastruture(IBaseRepository baseRepository, ILogger<Transactions> logger) 
+            : base(baseRepository, logger)
         {
         }
        

@@ -20,6 +20,11 @@ namespace TradingBot.Objects.Transaction
         public Guid ExchangeID { get; set;}
         public decimal Quantity { get; set; }
 
+        public Transactions()
+        {
+
+        }
+
         public Transactions(TransactionType transactionType, decimal transactionAmount, Guid userID, Guid exchangeID, decimal quantity)
         {
             TransactionTypeID = (int)transactionType; //? value : throw new Exception("Transaction Type not found");

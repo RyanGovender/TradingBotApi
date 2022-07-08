@@ -5,7 +5,7 @@ using TradingBot.ORM.Interfaces;
 
 namespace TradingBot.Infrastructure.Infrastruture.Common
 {
-    public abstract class BaseRepository<T> : IRepository<T> where T : class
+    public abstract class BaseRepository<T> : IRepository<T> where T : class, new()
     {
         private readonly IBaseRepository _base;
         private readonly ILogger<T> _logger;
@@ -16,7 +16,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             _logger = logger;
         }
 
-        public async Task<Result> DeleteAsync(T entityToDelete)
+        public async Task<Result> DeleteAsync(T entityToDelete!!)
         {
             var result = await _base.DeleteAsync(entityToDelete);
 
@@ -33,7 +33,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             if (!result.IsSuccess)
                 _logger.LogError(result?.Exception?.Message ?? "Critical Error.", id);
 
-            return result?.Source != null && result.IsSuccess ? result.Source: default;
+            return result?.Source != null && result.IsSuccess ? result.Source: new();
 
         }
 
@@ -47,7 +47,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             return result?.Source != null && result.IsSuccess ? result.Source : Array.Empty<T>();
         }
 
-        public virtual async Task<Result> InsertAsync(T data)
+        public virtual async Task<Result> InsertAsync(T data!!)
         {
            var result = await _base.InsertAsync(data);
 
@@ -57,7 +57,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             return result?.IsSuccess ?? false ? Result.SUCCESSFUL : Result.FAILED;
         }
 
-        public async Task<Result> UpdateAsync(T data)
+        public async Task<Result> UpdateAsync(T data!!)
         {
             var result = await _base.UpdateAsync(data);
 
