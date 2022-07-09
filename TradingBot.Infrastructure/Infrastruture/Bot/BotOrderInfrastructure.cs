@@ -11,7 +11,7 @@ using TradingBot.ORM.Interfaces;
 
 namespace TradingBot.Infrastructure.Infrastruture.Bot
 {
-    public class BotOrderInfrastructure : BaseRepository<BotOrder>, IRepository<BotOrder>, IBotOrder
+    public class BotOrderInfrastructure : BaseRepository<BotOrder>, IBotOrder
     {
         private readonly IBaseRepository _baseRepo;
        

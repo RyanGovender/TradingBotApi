@@ -6,7 +6,7 @@ using TradingBot.ORM.Interfaces;
 
 namespace TradingBot.Infrastructure.Infrastruture.Bot
 {
-    internal class BotOrderTransactionInfrastructure : BaseRepository<BotOrderTransactions>, IRepository<BotOrderTransactions>
+    public class BotOrderTransactionInfrastructure : BaseRepository<BotOrderTransactions>, IRepository<BotOrderTransactions>
     {
         public BotOrderTransactionInfrastructure(IBaseRepository baseRepository, ILogger<BotOrderTransactions> logger) : 
             base(baseRepository, logger)

@@ -34,5 +34,16 @@ namespace TradingBot.Objects.Transaction
             ExchangeID = exchangeID;
             Quantity = quantity;
         }
+
+        public Transactions(Guid id,TransactionType transactionType, decimal transactionAmount, Guid userID, Guid exchangeID, decimal quantity)
+        {
+            TransactionID = id;
+            TransactionTypeID = (int)transactionType; //? value : throw new Exception("Transaction Type not found");
+            TransactionAmount = transactionAmount;
+            OpeningBalance = 0.0m;
+            UserID = userID;
+            ExchangeID = exchangeID;
+            Quantity = quantity;
+        }
     }
 }

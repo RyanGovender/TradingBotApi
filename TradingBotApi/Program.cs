@@ -2,8 +2,10 @@ using TradingBot.Api.Services;
 using TradingBot.Domain.Extensions;
 using TradingBot.Infrastructure.Infrastruture.Bot;
 using TradingBot.Infrastructure.Infrastruture.Transaction;
+using TradingBot.Infrastructure.Infrastruture.UnitOfWork;
 using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Infrastructure.Interfaces.Common;
+using TradingBot.Infrastructure.Interfaces.UnitOfWork;
 using TradingBot.Objects.Bot;
 using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Extension;
@@ -23,6 +25,10 @@ builder.Services.RunBotTrader();
 
 builder.Services.AddSingleton<IBotOrder, BotOrderInfrastructure>();
 builder.Services.AddSingleton<IRepository<Transactions>, TransactionInfrastruture>();
+//builder.Services.AddSingleton<IRepository<BotOrder>, BotOrderInfrastructure>();
+builder.Services.AddSingleton<IRepository<BotOrderTransactions>, BotOrderTransactionInfrastructure>();
+
+builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddHostedService<BotService>();
 
