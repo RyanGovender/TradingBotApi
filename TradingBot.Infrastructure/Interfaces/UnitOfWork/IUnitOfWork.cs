@@ -14,6 +14,6 @@ namespace TradingBot.Infrastructure.Interfaces.UnitOfWork
     {
         IBotOrder BotOrderRepository { get; init; }
         IRepository<Transactions> TransactionsRepository { get;init; }
-        IRepository<BotOrderTransactions> BotOrderTransactionRepository { get; init; }
+        IBotOrderTransaction BotOrderTransactionRepository { get; init; }
     }
 }

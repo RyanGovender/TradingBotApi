@@ -14,9 +14,9 @@ namespace TradingBot.Infrastructure.Infrastruture.UnitOfWork
     {
         public IBotOrder BotOrderRepository { get; init; }
         public IRepository<Transactions> TransactionsRepository { get ; init ; }
-        public IRepository<BotOrderTransactions> BotOrderTransactionRepository { get ; init ; }
+        public IBotOrderTransaction BotOrderTransactionRepository { get ; init ; }
 
-        public UnitOfWork(IBotOrder botOrderRepository, IRepository<Transactions> transactionsRepository, IRepository<BotOrderTransactions> botOrderTransactionRepository)
+        public UnitOfWork(IBotOrder botOrderRepository, IRepository<Transactions> transactionsRepository, IBotOrderTransaction botOrderTransactionRepository)
         {
             BotOrderRepository = botOrderRepository;
             TransactionsRepository = transactionsRepository;

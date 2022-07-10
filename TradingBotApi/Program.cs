@@ -26,7 +26,7 @@ builder.Services.RunBotTrader();
 builder.Services.AddSingleton<IBotOrder, BotOrderInfrastructure>();
 builder.Services.AddSingleton<IRepository<Transactions>, TransactionInfrastruture>();
 //builder.Services.AddSingleton<IRepository<BotOrder>, BotOrderInfrastructure>();
-builder.Services.AddSingleton<IRepository<BotOrderTransactions>, BotOrderTransactionInfrastructure>();
+builder.Services.AddSingleton<IBotOrderTransaction, BotOrderTransactionInfrastructure>();
 
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
