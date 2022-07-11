@@ -60,26 +60,13 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
             return getAllOrders.Data;
         }
 
-        //refactor later on
-        public async Task<decimal> PlaceBuyOrder(string currencySymbol)
+        public async Task<dynamic> QueryOrder(long id, string currentSymbol)
         {
-            var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
-               .SpotApi.Trading.PlaceOrderAsync(currencySymbol, OrderSide.Buy, SpotOrderType.Market,0.1m);
+            var getOrder = await _binanceConnection
+                .CreateBinanceClient().SpotApi.Trading.GetOrderAsync(currentSymbol, id);
 
-            if (!placeBuyOrder.Success || placeBuyOrder.Data is null) return 0;
-
-            return placeBuyOrder.Data.Price;
-        }
-
-        public async Task<decimal> PlaceSellOrder(string currencySymbol)
-        {
-            var placeBuyOrder = await _binanceConnection.CreateBinanceClient()
-              .SpotApi.Trading.PlaceOrderAsync(currencySymbol, OrderSide.Sell, SpotOrderType.Market, 0.1m);
-
-            if (!placeBuyOrder.Success || placeBuyOrder.Data is null) return 0;
-
-            return placeBuyOrder.Data.Price;
-        }
+            return getOrder.Data;
+        } 
 
     }
 }

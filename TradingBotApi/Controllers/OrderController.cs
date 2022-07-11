@@ -22,5 +22,14 @@ namespace TradingBot.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("GetOrder")]
+        public async Task<IActionResult> GetOrder(string symbol, long id)
+        {
+            var result = await _market.QueryOrder(id, symbol);
+
+            return Ok(result);
+        }
     }
 }

@@ -35,30 +35,30 @@ namespace TradingBot.Domain.Services
 
             while (runBot)
             {
-                decimal currentPrice = await _market.GetMarketPrice(tradingSymbol);
+                //decimal currentPrice = await _market.GetMarketPrice(tradingSymbol);
 
-                if (isFristTrade)
-                {
-                    lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
-                    isFristTrade=false;
-                }
+                //if (isFristTrade)
+                //{
+                //    lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
+                //    isFristTrade=false;
+                //}
 
-                var nextOperation = _tradFactory
-                    .RunFactory(TradeStrategy.SIMPLE_TRADE, new Objects.MarketData { MarketId = tradingSymbol, CurrentPrice = currentPrice, PurchasePrice = lastOpPrice });
+                //var nextOperation = _tradFactory
+                //    .RunFactory(TradeStrategy.SIMPLE_TRADE, new Objects.MarketData { MarketId = tradingSymbol, CurrentPrice = currentPrice, PurchasePrice = lastOpPrice });
 
-                switch (nextOperation)
-                {
-                    case Trade.BUY:
-                        lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
-                        break;
-                    case Trade.SELL:
-                        lastOpPrice = await _market.PlaceSellOrder(tradingSymbol);
-                        isFristTrade = true;
-                        break;
-                    case Trade.HOLD:
-                        _logger.LogDebug("{0} is holding : current Value {1}",tradingSymbol, currentPrice);
-                        continue;
-                }
+                //switch (nextOperation)
+                //{
+                //    case Trade.BUY:
+                //        lastOpPrice = await _market.PlaceBuyOrder(tradingSymbol);
+                //        break;
+                //    case Trade.SELL:
+                //        lastOpPrice = await _market.PlaceSellOrder(tradingSymbol);
+                //        isFristTrade = true;
+                //        break;
+                //    case Trade.HOLD:
+                //        _logger.LogDebug("{0} is holding : current Value {1}",tradingSymbol, currentPrice);
+                //        continue;
+                //}
 
                 await Task.Delay(1000);
             }

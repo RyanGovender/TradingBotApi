@@ -10,6 +10,7 @@ namespace TradingBot.Objects.Bot
     public class BotOrderAggregate
     {
         public Guid BotOrderID { get; set; }
+        public long? BinaceOrderID { get; init; }
         public int TradeStrategyID { get; set; }
         public int OrderTypeID { get; set; }
         public string TradingSymbol { get; set; } = string.Empty;
@@ -17,6 +18,7 @@ namespace TradingBot.Objects.Bot
         public decimal Quantity { get; set; } = decimal.Zero;
         public bool IsActive { get; set; }
         public Trade NextTradAction { get; set; } = Trade.HOLD;
+        public bool? IsOrderFilled { get; set; }
         public bool IsFirstTrade { get; set; } = false;
     }
 }

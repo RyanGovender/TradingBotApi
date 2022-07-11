@@ -3,6 +3,7 @@ using TradingBot.Infrastructure.Infrastruture.Common;
 using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Infrastructure.Interfaces.Common;
 using TradingBot.Objects.Enums;
+using TradingBot.Objects.Order;
 using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Interfaces;
 
@@ -19,7 +20,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             _transactionRepo = transactionRepo;
         }
 
-        public async Task<Result> InsertBotOrderTransactionAsync(Transactions transactions!!, Guid botOrderID)
+        public async Task<Result> InsertBotOrderTransactionAsync(Transactions transactions!!, PlaceOrderReturn placeOrderReturn, Guid botOrderID)
         {
             var transactionResult = await _transactionRepo.InsertAsync(transactions);
 
@@ -29,7 +30,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
                 return transactionResult;
             }
 
-            var result = await base.InsertAsync(new BotOrderTransactions { BotOrderID = botOrderID, TransactionID = transactions.TransactionID });
+            var result = await base.InsertAsync(new BotOrderTransactions { BotOrderID = botOrderID, TransactionID = transactions.TransactionID, BinanceOrderID = placeOrderReturn.Id, IsOrderFilled = placeOrderReturn.IsOrderFilled });
 
             return result;
         }

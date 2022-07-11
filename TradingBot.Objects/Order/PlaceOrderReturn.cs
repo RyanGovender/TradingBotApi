@@ -18,6 +18,7 @@ namespace TradingBot.Objects.Order
         public decimal RequestedQuantity { get; set; }
         public decimal QuantityFilled { get; set; }
         public decimal? StopPrice { get; set; }
+        public bool IsOrderFilled => RequestedQuantity == QuantityFilled;
         public Error? Error { get; set; }
         public bool IsSuccess => Error == null;
 

@@ -5,7 +5,9 @@ namespace TradingBot.Objects.Transaction
     [Table(name:"botordertransactions")]
     public class BotOrderTransactions
     {
-        public Guid BotOrderID { get; set; }
-        public Guid TransactionID { get; set; }
+        public Guid BotOrderID { get; init; }
+        public Guid TransactionID { get; init; }
+        public long BinanceOrderID { get; init; }
+        public bool IsOrderFilled { get; set; }
     }
 }

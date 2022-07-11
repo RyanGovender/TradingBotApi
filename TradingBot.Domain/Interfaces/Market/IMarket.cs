@@ -12,7 +12,6 @@ namespace TradingBot.Domain.Interfaces.Market
         Task<dynamic> GetAllOrders(string symbol);
         Task<decimal> GetMarketPrice(string currencySymbol);
         Task<PlaceOrderReturn> PlaceOrder(PlaceOrderData orderData);
-        Task<decimal> PlaceSellOrder(string currencySymbol);
-        Task<decimal> PlaceBuyOrder(string currencySymbol);
+        Task<dynamic> QueryOrder(long id, string currentSymbol);
     }
 }
