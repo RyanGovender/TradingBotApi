@@ -13,11 +13,18 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
     {
 
         private readonly IRepository<Transactions> _transactionRepo;
+        private readonly IBaseRepository _baseRepo;
 
         public BotOrderTransactionInfrastructure(IBaseRepository baseRepository, ILogger<BotOrderTransactions> logger, IRepository<Transactions> transactionRepo) : 
             base(baseRepository, logger)
         {
             _transactionRepo = transactionRepo;
+            _baseRepo = baseRepository;
+        }
+
+        public async Task<BotOrderTransactions> GetBotOrderTransactionsByBinanceID(long binanceID)
+        {
+            var result = await _baseRepo.RunQuerySingleAsync<BotOrderTransactions>("SELECT * FROM exchange.BotOrderTransactions bt");
         }
 
         public async Task<Result> InsertBotOrderTransactionAsync(Transactions transactions!!, PlaceOrderReturn placeOrderReturn, Guid botOrderID)
