@@ -108,12 +108,14 @@ namespace TradingBot.ORM.Base
             {
                 if (string.IsNullOrEmpty(storeProcedure) && string.IsNullOrEmpty(sqlStatement))
                 {
-                    throw new ArgumentNullException(nameof(sqlStatement) + nameof(storeProcedure));
+                    throw new (nameof(sqlStatement) + nameof(storeProcedure));
                 }
+
+                CommandType commandType = storeProcedure != null ? CommandType.StoredProcedure : CommandType.Text;
 
                 using IDbConnection connection = _conn.GetRelationConnection();
 
-                var result = await connection.QueryAsync<T>(storeProcedure ?? sqlStatement , parameters);
+                var result = await connection.QueryAsync<T>(storeProcedure ?? sqlStatement , parameters, commandType: commandType);
 
                 return new MatterDapterResponse<IEnumerable<T>>(result);
             }
@@ -129,12 +131,14 @@ namespace TradingBot.ORM.Base
             {
                 if (string.IsNullOrEmpty(storeProcedure) && string.IsNullOrEmpty(sqlStatement))
                 {
-                    throw new ArgumentNullException(nameof(sqlStatement) + nameof(storeProcedure));
+                    throw new (nameof(sqlStatement) + nameof(storeProcedure));
                 }
+
+                CommandType commandType = storeProcedure != null ? CommandType.StoredProcedure : CommandType.Text;
 
                 using IDbConnection connection = _conn.GetRelationConnection();
 
-                var result = await connection.QuerySingleAsync<T>(storeProcedure ?? sqlStatement , parameters);
+                var result = await connection.QuerySingleAsync<T>(storeProcedure ?? sqlStatement , parameters, commandType: commandType);
 
                 return new MatterDapterResponse<T>(result);
             }

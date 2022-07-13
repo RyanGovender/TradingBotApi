@@ -24,7 +24,10 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
 
         public async Task<BotOrderTransactions> GetBotOrderTransactionsByBinanceID(long binanceID)
         {
-            var result = await _baseRepo.RunQuerySingleAsync<BotOrderTransactions>("SELECT * FROM exchange.BotOrderTransactions bt");
+            var result = await _baseRepo.
+                RunQuerySingleAsync<BotOrderTransactions>(sqlStatement: $"CALL exchange.getBotOrderTransactionFormBinanceID({binanceID})", parameters: new { BinanceID = binanceID });
+
+            return result.Source;
         }
 
         public async Task<Result> InsertBotOrderTransactionAsync(Transactions transactions!!, PlaceOrderReturn placeOrderReturn, Guid botOrderID)

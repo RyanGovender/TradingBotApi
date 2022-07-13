@@ -48,6 +48,7 @@ namespace TradingBot.Api.Services
                 {
                     var orderStatus = await _market.QueryOrder(botAggregate.BinaceOrderID.Value, botAggregate.TradingSymbol);
                     var status = (Status)orderStatus.Status;
+                    var order = await _uow.BotOrderTransactionRepository.GetBotOrderTransactionsByBinanceID(botAggregate.BinaceOrderID.Value);
                     continue;
                 }
 
