@@ -22,11 +22,14 @@ namespace TradingBot.Domain.Exchanges.Binance.Market
 
         public async Task<decimal> GetMarketPrice(string currencySymbol)
         {
-            var assetPriceBOOK = await _binanceConnection.CreateBinanceClient()
-                .SpotApi.ExchangeData.GetCurrentAvgPriceAsync(currencySymbol);
+        //  var assetPriceBOOK = await _binanceConnection.CreateBinanceClient()
+         //     .SpotApi.ExchangeData.GetCurrentAvgPriceAsync(currencySymbol);
 
             var assetPrice = await _binanceConnection.CreateBinanceClient()
                .SpotApi.ExchangeData.GetPriceAsync(currencySymbol);
+
+       //   var asset = await _binanceConnection.CreateBinanceClient()
+       //       .SpotApi.ExchangeData.GetBookPriceAsync(currencySymbol);
 
             if (!assetPrice.Success || assetPrice.Data is null) return 0;
 

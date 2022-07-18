@@ -7,7 +7,6 @@ namespace TradingBot.Infrastructure.Interfaces.Bot
 {
     public interface IBotOrderTransaction : IRepository<BotOrderTransactions>
     {
-        Task<BotOrderTransactions> GetBotOrderTransactionsByBinanceID(long binanceID);
         Task<Result> InsertBotOrderTransactionAsync(Transactions transactions, PlaceOrderReturn placeOrderReturn, Guid botOrderID);
     }
 }

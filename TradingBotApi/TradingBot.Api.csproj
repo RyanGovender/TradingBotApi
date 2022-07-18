@@ -25,7 +25,6 @@
     <ProjectReference Include="..\TradingBot.Domain\TradingBot.Domain.csproj" />
     <ProjectReference Include="..\TradingBot.Infrastructure\TradingBot.Infrastructure.csproj" />
     <ProjectReference Include="..\TradingBot.Objects\TradingBot.Objects.csproj" />
-    <ProjectReference Include="..\TradingBot.ORM\TradingBot.ORM.csproj" />
   </ItemGroup>
 
 </Project>

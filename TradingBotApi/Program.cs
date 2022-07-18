@@ -5,6 +5,7 @@ using TradingBot.Infrastructure.Infrastruture.Transaction;
 using TradingBot.Infrastructure.Infrastruture.UnitOfWork;
 using TradingBot.Infrastructure.Interfaces.Bot;
 using TradingBot.Infrastructure.Interfaces.Common;
+using TradingBot.Infrastructure.Interfaces.Transaction;
 using TradingBot.Infrastructure.Interfaces.UnitOfWork;
 using TradingBot.Objects.Bot;
 using TradingBot.Objects.Transaction;
@@ -24,7 +25,7 @@ builder.Services.RunBotTrader();
 //move these to extension later on
 
 builder.Services.AddSingleton<IBotOrder, BotOrderInfrastructure>();
-builder.Services.AddSingleton<IRepository<Transactions>, TransactionInfrastruture>();
+builder.Services.AddSingleton<ITransaction, TransactionInfrastruture>();
 //builder.Services.AddSingleton<IRepository<BotOrder>, BotOrderInfrastructure>();
 builder.Services.AddSingleton<IBotOrderTransaction, BotOrderTransactionInfrastructure>();
 
