@@ -58,13 +58,22 @@ namespace TradingBot.Api.Services
                     {
                         case Status.Filled:
                             await _uow.BotOrderTransactionRepository
-                      .InsertBotOrderTransactionAsync(new Transactions(TransactionType.BUY, orderStatus.Price, resultbot.UserID, resultbot.ExchangeID, orderStatus.QuantityFilled), orderStatus, botAggregate.BotOrderID);
+                      .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, orderStatus.Price, resultbot.UserID, resultbot.ExchangeID, orderStatus.QuantityFilled));
                             break;
                         case Status.Expired:
                             var price = await _uow.TransactionsRepository.GetLastTransactionWithPriceAsync(botAggregate.BotOrderID);
                             var quantity = orderStatus.QuantityFilled + orderStatus.QuantityRemaining;
-                            await _uow.BotOrderTransactionRepository
-                      .InsertBotOrderTransactionAsync(new Transactions(TransactionType.BUY,  price.TransactionAmount, resultbot.UserID, resultbot.ExchangeID, quantity), orderStatus, botAggregate.BotOrderID);
+                            try
+                            {
+                                var ted = await _uow.BotOrderTransactionRepository
+                     .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, price.TransactionAmount, resultbot.UserID, resultbot.ExchangeID, quantity));
+                            }
+                            catch (Exception ex)
+                            {
+
+                                throw;
+                            }
+                          
                             break;
                     }
 
@@ -77,7 +86,7 @@ namespace TradingBot.Api.Services
                     { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity, Price = currentPrice });
                     if (buyPrice.IsSuccess)
                         await _uow.BotOrderTransactionRepository
-                       .InsertBotOrderTransactionAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled), buyPrice, botAggregate.BotOrderID);
+                         .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, buyPrice.Id, buyPrice.IsOrderFilled, new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
                     continue;
                 }
 
@@ -95,14 +104,14 @@ namespace TradingBot.Api.Services
                         { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity }); //await _market.PlaceBuyOrder(botAggregate.TradingSymbol);
                         if (buyPrice.IsSuccess)
                             await _uow.BotOrderTransactionRepository
-                          .InsertBotOrderTransactionAsync(new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled), buyPrice, botAggregate.BotOrderID);
+                          .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, buyPrice.Id, buyPrice.IsOrderFilled, new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
                         break;
                     case Trade.SELL:
                         var sellPrice = await _market.PlaceOrder(new PlaceOrderData
                         { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.SELL, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity });
                         if (sellPrice.IsSuccess)
                             await _uow.BotOrderTransactionRepository
-                        .InsertBotOrderTransactionAsync(new Transactions(TransactionType.SELL, sellPrice.Price, resultbot.UserID, resultbot.ExchangeID, sellPrice.QuantityFilled), sellPrice, botAggregate.BotOrderID);
+                        .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, sellPrice.Id, sellPrice.IsOrderFilled, new Transactions(TransactionType.BUY, sellPrice.Price, resultbot.UserID, resultbot.ExchangeID, sellPrice.QuantityFilled));
                         break;
                     case Trade.HOLD:
                         _logger.LogDebug("{0} is holding : current Value {1}", botAggregate.TradingSymbol, currentPrice);

@@ -20,7 +20,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             _transactionRepo = transactionRepo;
         }
 
-        public async Task<Result> InsertBotOrderTransactionAsync(Transactions transactions!!, PlaceOrderReturn placeOrderReturn, Guid botOrderID)
+        public async Task<Result> InsertBotOrderTransactionAsync(Guid botOrderID, long binanceOrderID, bool isOrderFilled, Transactions transactions!!)
         {
             var transactionResult = await _transactionRepo.InsertAsync(transactions);
 
@@ -29,8 +29,8 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
                 //log error here
                 return transactionResult;
             }
-
-            var result = await base.InsertAsync(new BotOrderTransactions { BotOrderID = botOrderID, TransactionID = transactions.TransactionID, BinanceOrderID = placeOrderReturn.Id, IsOrderFilled = placeOrderReturn.IsOrderFilled });
+            
+            var result = await base.InsertAsync(new BotOrderTransactions { BotOrderID = botOrderID, TransactionID = transactions.TransactionID, BinanceOrderID = binanceOrderID, IsOrderFilled = isOrderFilled });
 
             return result;
         }
