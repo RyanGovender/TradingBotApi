@@ -8,6 +8,7 @@ using TradingBot.Infrastructure.Interfaces.Common;
 using TradingBot.Infrastructure.Interfaces.Transaction;
 using TradingBot.Infrastructure.Interfaces.UnitOfWork;
 using TradingBot.Objects.Bot;
+using TradingBot.Objects.Exchange;
 using TradingBot.Objects.Transaction;
 using TradingBot.ORM.Extension;
 using TradingBot.ORM.Interfaces;
@@ -28,6 +29,7 @@ builder.Services.AddSingleton<IBotOrder, BotOrderInfrastructure>();
 builder.Services.AddSingleton<ITransaction, TransactionInfrastruture>();
 //builder.Services.AddSingleton<IRepository<BotOrder>, BotOrderInfrastructure>();
 builder.Services.AddSingleton<IBotOrderTransaction, BotOrderTransactionInfrastructure>();
+builder.Services.AddSingleton<IRepository<Symbol>, ExchangeInfrastructure>();
 
 builder.Services.AddSingleton<IUnitOfWork, UnitOfWork>();
 

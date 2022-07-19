@@ -42,13 +42,18 @@ namespace TradingBot.Api.Services
         public async Task BotAsync(CancellationToken cancellationToken)
         {
             var botOrder = await _uow.BotOrderRepository.GetAllAsync();
-            var resultbot = botOrder.FirstOrDefault(X => X.ID == Guid.Parse("aff5a75e-d12e-4352-950a-a867512d957f"));
+            var resultbot = botOrder.FirstOrDefault(X => X.ID == Guid.Parse("04dc9c4d-959f-42da-a55b-bae3c9b04a7f"));
             bool runBot = true;
-            Console.Write("Service starting");
+            Console.WriteLine("Service starting");
             while (runBot)
             {
+                Console.WriteLine("Bot is running : {0}", DateTime.Now);
                 var botAggregate = await _uow.BotOrderRepository.GetBotOrderAggregate(resultbot);
                 decimal currentPrice = await _market.GetMarketPrice(botAggregate.TradingSymbol);
+
+                Console.WriteLine("Data : Binance ID : {0} Bot OrderID : {1}, TRADE: {2}, ISFIRSTRADE : {3}, ISORDERFILLED:{4}, NEXT TRADE:{5}, AMOUNT:{6}", botAggregate.BinaceOrderID, botAggregate.BotOrderID,botAggregate.TradeStrategyID, 
+                    botAggregate.IsFirstTrade, botAggregate.IsOrderFilled, botAggregate.NextTradAction, botAggregate.TransactionAmount);
+                Console.WriteLine("curent price : {0}", currentPrice);
 
                 if (!botAggregate?.IsOrderFilled.Value ?? false)
                 {
@@ -63,17 +68,8 @@ namespace TradingBot.Api.Services
                         case Status.Expired:
                             var price = await _uow.TransactionsRepository.GetLastTransactionWithPriceAsync(botAggregate.BotOrderID);
                             var quantity = orderStatus.QuantityFilled + orderStatus.QuantityRemaining;
-                            try
-                            {
-                                var ted = await _uow.BotOrderTransactionRepository
-                     .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, price.TransactionAmount, resultbot.UserID, resultbot.ExchangeID, quantity));
-                            }
-                            catch (Exception ex)
-                            {
-
-                                throw;
-                            }
-                          
+                            await _uow.BotOrderTransactionRepository
+                            .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, price.TransactionAmount, resultbot.UserID, resultbot.ExchangeID, quantity));
                             break;
                     }
 
@@ -94,8 +90,12 @@ namespace TradingBot.Api.Services
                   decimal.Round((botAggregate.TransactionAmount / currentPrice) * botAggregate.Quantity, 4) :
                   botAggregate.Quantity;
 
+                Console.WriteLine("Quantity : {0}", botAggregate.Quantity);
+
                 var nextOperation = _tradFactory
                     .RunFactory(TradeStrategy.SIMPLE_TRADE, new MarketData { MarketId = botAggregate.TradingSymbol, CurrentPrice = currentPrice, PurchasePrice = botAggregate.TransactionAmount, NextAction = botAggregate.NextTradAction });
+
+                Console.WriteLine("Next Operation : {0}", nextOperation);
 
                 switch (nextOperation)
                 {
@@ -121,7 +121,7 @@ namespace TradingBot.Api.Services
 
                 await Task.Delay(10000, cancellationToken);
             }
-            Console.Write("Service closing...");
+            Console.WriteLine("Service closing...");
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

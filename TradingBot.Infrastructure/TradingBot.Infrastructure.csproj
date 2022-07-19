@@ -23,4 +23,8 @@
     <ProjectReference Include="..\TradingBot.ORM\TradingBot.ORM.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastruture\Exchange\" />
+  </ItemGroup>
+
 </Project>
