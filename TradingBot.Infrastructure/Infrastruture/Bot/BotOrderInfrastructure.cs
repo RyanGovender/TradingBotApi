@@ -28,19 +28,14 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             var symbolDetailsTask = _symbolRepo.FindAsync(botOrder.ExchangeID);
             //check if first trade
             // get last price from transactions using last buy transaction type
-            var botOrderTransactionTask =  _baseRepo
-                .RunQuerySingleAsync<dynamic>(sqlStatement: $"SELECT tv.\"TransactionAmount\", tv.\"TransactionTypeID\", tv.\"Quantity\", bt.\"IsOrderFilled\", bt.\"BinanceOrderID\" FROM exchange.transaction tv " +
-                "inner join exchange.BotOrderTransactions bt " +
-                $"on tv.\"TransactionID\" = bt.\"TransactionID\" where bt.\"BotOrderID\" ='{botOrder.ID}' ORDER BY bt.\"ID\" DESC LIMIT 1");
+            var botOrderTransactionTask = _baseRepo.RunQuerySingleAsync<dynamic>("exchange.getlatesttransactionusingbotorderid", parameters: new { botorderid = botOrder.ID });
+           
             //get trading symbol using exchange ID
 
             await Task.WhenAll(symbolDetailsTask, botOrderTransactionTask);
 
             var symbolDetails =  await symbolDetailsTask;
             var botOrderTransaction = await botOrderTransactionTask;
-
-          //  var currentName = await _baseRepo
-          //     .RunQuerySingleAsync<string>(sqlStatement: $"SELECT \"Name\" FROM exchange.Exchange e where e.\"ID\" = '{botOrder.ExchangeID}'");
 
             //TransactionTypeID
 

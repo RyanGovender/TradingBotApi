@@ -10,6 +10,7 @@ namespace TradingBot.Objects.Exchange
     [Table(name:"exchange")]
     public class Symbol
     {
+        [Column(name:"ID")]
         public Guid ID { get; } = new Guid();
         public string Name { get; init; }
         public string BaseAsset { get; init; }
