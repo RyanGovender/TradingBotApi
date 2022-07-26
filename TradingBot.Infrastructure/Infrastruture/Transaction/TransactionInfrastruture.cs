@@ -30,7 +30,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Transaction
         public async Task<Transactions> GetLastTransactionWithPriceAsync(Guid BotOrderID)
         {
             var result = await _baseRepo.
-                RunQuerySingleAsync<Transactions>($"exchange.getbotordertransactionformbinanceid", parameters: new { botorderid = BotOrderID });
+                RunQuerySingleAsync<Transactions>($"exchange.getbotordertransactionformid", parameters: new { botorderid = BotOrderID });
 
             if (!result.IsSuccess || result.Source == null)
                 throw new(result?.Exception?.Message);

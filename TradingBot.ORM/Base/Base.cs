@@ -125,7 +125,7 @@ namespace TradingBot.ORM.Base
             }
         }
 
-        public async Task<MatterDapterResponse<T>> RunQuerySingleAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null)
+        public async Task<MatterDapterResponse<T>> RunQuerySingleAsync<T>(string? storeProcedure = null, string? sqlStatement = null, object? parameters = null) 
         {
             try
             {
@@ -140,7 +140,13 @@ namespace TradingBot.ORM.Base
 
                 var result = await connection.QuerySingleAsync<T>(storeProcedure ?? sqlStatement , parameters, commandType: commandType);
 
+                if(result == null) return new MatterDapterResponse<T>();
+
                 return new MatterDapterResponse<T>(result);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return new MatterDapterResponse<T>(default, ex);
             }
             catch(Exception ex)
             {
