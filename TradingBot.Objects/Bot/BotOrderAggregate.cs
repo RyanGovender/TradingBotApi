@@ -20,5 +20,22 @@ namespace TradingBot.Objects.Bot
         public Trade NextTradAction { get; set; } = Trade.HOLD;
         public bool? IsOrderFilled { get; set; }
         public bool IsFirstTrade { get; set; } = false;
+
+        public BotOrderAggregate()
+        {
+
+        }
+
+        public BotOrderAggregate(Guid botOrderID, int tradeStrategyID, bool isActive, string tradingSymbol, int orderTypeID, decimal quantity)
+        {
+            BotOrderID = botOrderID;
+            TradeStrategyID = tradeStrategyID;
+            IsActive = isActive;
+            TradingSymbol = tradingSymbol;
+            OrderTypeID = orderTypeID;
+            Quantity = quantity;
+            NextTradAction = Trade.BUY;
+            IsFirstTrade = true;
+        }
     }
 }

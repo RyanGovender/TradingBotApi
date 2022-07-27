@@ -29,43 +29,44 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
 
         public async Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder!!)
         {
-            var symbolDetailsTask = _symbolRepo.FindAsync(botOrder.ExchangeID);
             //check if first trade
             // get last price from transactions using last buy transaction type
-            var botOrderTransactionTask = _baseRepo.RunQuerySingleAsync<LatestTransaction>("exchange.getlatesttransactionusingbotorderid", parameters: new { botorderid = botOrder.ID });
-
+            var symbolDetailsTask = _symbolRepo.FindAsync(botOrder.ExchangeID);
+            var hasTransactionTask = _transactionRepo.HasBotOrderAsync(botOrder.ID);
+          
             //get trading symbol using exchange ID
-
-            await Task.WhenAll(symbolDetailsTask, botOrderTransactionTask);
+            await Task.WhenAll(symbolDetailsTask, hasTransactionTask);
 
             var symbolDetails = await symbolDetailsTask;
-            var botOrderTransaction = await botOrderTransactionTask;
+            var hasTransaction = await hasTransactionTask;
 
-            //TransactionTypeID
-            if (symbolDetails == null || botOrderTransaction == null)
+            if (symbolDetails == null)
                 throw new NullReferenceException("Data not found.");
 
-            Trade nextTradeAction = botOrderTransaction?.Source is null ? Trade.BUY :
-                botOrderTransaction.Source?.TransactionTypeID == (int)TransactionType.BUY ? Trade.SELL : Trade.BUY;
+            if (!hasTransaction)
+            {
+                return new(botOrder.ID, botOrder.TradeStrategyID, botOrder.IsActive, symbolDetails.Name, botOrder.OrderTypeID, botOrder.Quantity);
+            }
 
-            decimal quantity = botOrderTransaction?.Source is null ? botOrder.Quantity : botOrderTransaction.Source.Quantity;
+            var botOrderTransaction = await _transactionRepo.GetLatestTransactionAsync(botOrder.ID);
 
-            var botA = new BotOrderAggregate()
+            if (botOrderTransaction is null)
+                return new();
+
+            return new()
             {
                 BotOrderID = botOrder.ID,
                 TradeStrategyID = botOrder.TradeStrategyID,
                 IsActive = botOrder.IsActive,
                 TradingSymbol = symbolDetails.Name,
                 OrderTypeID = botOrder.OrderTypeID,
-                TransactionAmount = botOrderTransaction?.Source?.TransactionAmount ?? decimal.Zero,
-                Quantity = decimal.Round(quantity,4),
-                IsFirstTrade = botOrderTransaction?.Source is null,
-                IsOrderFilled = botOrderTransaction?.Source.IsOrderFilled, 
-                BinaceOrderID = botOrderTransaction?.Source.BinanceOrderID,
-                NextTradAction = nextTradeAction
+                TransactionAmount = botOrderTransaction.TransactionAmount,
+                Quantity = decimal.Round(botOrderTransaction.Quantity, 4),
+                IsFirstTrade = false,
+                IsOrderFilled = botOrderTransaction.IsOrderFilled, 
+                BinaceOrderID = botOrderTransaction.BinanceOrderID,
+                NextTradAction = botOrderTransaction.TransactionTypeID == (int)TransactionType.BUY ? Trade.SELL : Trade.BUY
             };
-
-           return botA;
         }
     }
 }

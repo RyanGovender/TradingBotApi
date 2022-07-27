@@ -7,5 +7,7 @@ namespace TradingBot.Infrastructure.Interfaces.Transaction
     {
         Task<Transactions> GetTransactionByBinanceID(long binanceID);
         Task<Transactions> GetLastTransactionWithPriceAsync(Guid BotOrderID);
+        Task<bool> HasBotOrderAsync(Guid BotOrderID);
+        Task<LatestTransaction> GetLatestTransactionAsync(Guid BotOrderID);
     }
 }

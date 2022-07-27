@@ -146,7 +146,7 @@ namespace TradingBot.ORM.Base
             }
             catch(InvalidOperationException ex)
             {
-                return new MatterDapterResponse<T>(default, ex);
+                throw;
             }
             catch(Exception ex)
             {

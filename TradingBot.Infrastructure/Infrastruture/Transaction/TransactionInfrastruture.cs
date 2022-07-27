@@ -19,7 +19,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Transaction
         public async Task<Transactions> GetTransactionByBinanceID(long binanceID)
         {
             var result = await _baseRepo.
-                RunQuerySingleAsync<Transactions>($"exchange.getbotordertransactionformbinanceid", parameters: new { binanceid = binanceID });
+                RunQuerySingleAsync<Transactions>(Function.GetBotOrderTransactionUsingBinanceID, parameters: new { binanceid = binanceID });
 
             if (!result.IsSuccess || result.Source==null)
                 throw new(result?.Exception?.Message);
@@ -30,7 +30,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Transaction
         public async Task<Transactions> GetLastTransactionWithPriceAsync(Guid BotOrderID)
         {
             var result = await _baseRepo.
-                RunQuerySingleAsync<Transactions>($"exchange.getbotordertransactionformid", parameters: new { botorderid = BotOrderID });
+                RunQuerySingleAsync<Transactions>(Function.GetBotOrderTransactionUsingID, parameters: new { botorderid = BotOrderID });
 
             if (!result.IsSuccess || result.Source == null)
                 throw new(result?.Exception?.Message);
@@ -38,5 +38,22 @@ namespace TradingBot.Infrastructure.Infrastruture.Transaction
             return result?.Source ?? new();
         }
 
+        public async Task<LatestTransaction> GetLatestTransactionAsync(Guid BotOrderID)
+        {
+            var botOrderTransactionTask = await _baseRepo
+                    .RunQuerySingleAsync<LatestTransaction>(Function.GetLastestTransactonUsingBotOrderID, parameters: new { botorderid = BotOrderID });
+
+            if (!botOrderTransactionTask.IsSuccess || botOrderTransactionTask.Source == null)
+                throw new(botOrderTransactionTask?.Exception?.Message);
+
+            return botOrderTransactionTask.Source;
+        }
+
+        public async Task<bool> HasBotOrderAsync(Guid BotOrderID)
+        {
+            var BotOrderTransactionTask = await _baseRepo.RunQuerySingleAsync<long>(Function.HasBotOrderTransaction, parameters: new { botorderid = BotOrderID });
+
+            return BotOrderTransactionTask.IsSuccess && BotOrderTransactionTask.Source > 0;
+        }
     }
 }
