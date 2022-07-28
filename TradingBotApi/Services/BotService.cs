@@ -47,6 +47,8 @@ namespace TradingBot.Api.Services
             Console.WriteLine("Service starting");
             while (runBot)
             {
+                if (resultbot is null) break;
+
                 Console.WriteLine("Bot is running : {0}", DateTime.Now);
                 var botAggregate = await _uow.BotOrderRepository.GetBotOrderAggregate(resultbot);
                 decimal currentPrice = await _market.GetMarketPrice(botAggregate.TradingSymbol);
@@ -55,35 +57,42 @@ namespace TradingBot.Api.Services
                     botAggregate.IsFirstTrade, botAggregate.IsOrderFilled, botAggregate.NextTradAction, botAggregate.TransactionAmount);
                 Console.WriteLine("curent price : {0}", currentPrice);
 
-                if (!botAggregate?.IsOrderFilled.Value ?? false)
-                {
-                    var orderStatus = await _market.QueryOrder(botAggregate.BinaceOrderID.Value, botAggregate.TradingSymbol);
-
-                    switch ((Status)orderStatus.Status)
-                    {
-                        case Status.Filled:
-                            await _uow.BotOrderTransactionRepository
-                      .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, orderStatus.Price, resultbot.UserID, resultbot.ExchangeID, orderStatus.QuantityFilled));
-                            break;
-                        case Status.Expired:
-                            var price = await _uow.TransactionsRepository.GetLastTransactionWithPriceAsync(botAggregate.BotOrderID);
-                            var quantity = orderStatus.QuantityFilled + orderStatus.QuantityRemaining;
-                            await _uow.BotOrderTransactionRepository
-                            .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, price.TransactionAmount, resultbot.UserID, resultbot.ExchangeID, quantity));
-                            break;
-                    }
-
-                    continue;
-                }
+                if (botAggregate is null) break;
 
                 if (botAggregate.IsFirstTrade)
                 {
-                    var buyPrice = await _market.PlaceOrder(new PlaceOrderData
-                    { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity, Price = currentPrice });
-                    if (buyPrice.IsSuccess)
-                        await _uow.BotOrderTransactionRepository
-                         .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, buyPrice.Id, buyPrice.IsOrderFilled, new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
-                    continue;
+                    var placeOrderData = new PlaceOrderData
+                    { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity, Price = currentPrice };
+
+                    _ = _uow.OrderInfrastruture.PlaceOrder(placeOrderData, resultbot.UserID, resultbot.ExchangeID, resultbot.ID);
+                    //var buyPrice = await _market.PlaceOrder(new PlaceOrderData
+                    //{ CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.BUY, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity, Price = currentPrice });
+                    //if (buyPrice.IsSuccess)
+                    //    await _uow.BotOrderTransactionRepository
+                    //     .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, buyPrice.Id, buyPrice.IsOrderFilled, new Transactions(TransactionType.BUY, buyPrice.Price, resultbot.UserID, resultbot.ExchangeID, buyPrice.QuantityFilled));
+                    break;
+                }
+
+
+                if (!botAggregate.IsFirstTrade &&(!botAggregate.IsOrderFilled.HasValue || !botAggregate.IsOrderFilled.Value))
+                {
+                    _ = _uow.OrderInfrastruture.CheckIncompleteOrder(botAggregate, resultbot.UserID, resultbot.ExchangeID);
+                    //var orderStatus = await _market.QueryOrder(botAggregate.BinaceOrderID.Value, botAggregate.TradingSymbol);
+
+                    //switch ((Status)orderStatus.Status)
+                    //{
+                    //    case Status.Filled:
+                    //         await _uow.BotOrderTransactionRepository
+                    //        .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, orderStatus.Price, resultbot.UserID, resultbot.ExchangeID, orderStatus.QuantityFilled));
+                    //        break;
+                    //    case Status.Expired:
+                    //        var price = await _uow.TransactionsRepository.GetLastTransactionWithPriceAsync(botAggregate.BotOrderID);
+                    //        var quantity = orderStatus.QuantityFilled + orderStatus.QuantityRemaining;
+                    //        await _uow.BotOrderTransactionRepository
+                    //        .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, botAggregate.BinaceOrderID.Value, true, new Transactions(TransactionType.BUY, price.TransactionAmount, resultbot.UserID, resultbot.ExchangeID, quantity));
+                    //        break;
+                    //}
+                    break;
                 }
 
                 botAggregate.Quantity = botAggregate.NextTradAction == Trade.BUY ?

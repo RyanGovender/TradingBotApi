@@ -16,13 +16,11 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
 {
     public class BotOrderInfrastructure : BaseRepository<BotOrder>, IBotOrder
     {
-        private readonly IBaseRepository _baseRepo;
         private readonly ITransaction _transactionRepo;
         private readonly IRepository<Symbol> _symbolRepo;
 
         public BotOrderInfrastructure(IBaseRepository baseRepository, ILogger<BotOrder> logger, IRepository<Symbol> symbolRepo, ITransaction transaction) : base(baseRepository, logger)
         {
-            _baseRepo = baseRepository;
             _symbolRepo = symbolRepo;
             _transactionRepo = transaction;
         }
