@@ -27,7 +27,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Order
             _transactionRepository = transaction;
         }
 
-        public async Task<Result> PlaceOrder(PlaceOrderData orderData!!, Guid userID, Guid exchangeID, Guid botOrderID)
+        public async Task<Result> PlaceOrder(PlaceOrderData orderData, Guid userID, Guid exchangeID, Guid botOrderID)
         {
             var buyPrice = await _market.PlaceOrder(orderData);
 
@@ -38,7 +38,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Order
                  .InsertBotOrderTransactionAsync(botOrderID, buyPrice.Id, buyPrice.IsOrderFilled, new Transactions(TransactionType.BUY, buyPrice.Price, userID, exchangeID, buyPrice.QuantityFilled));
         }
 
-        public async Task CheckIncompleteOrder(BotOrderAggregate botOrder!!, Guid userID, Guid exchangeID)
+        public async Task CheckIncompleteOrder(BotOrderAggregate botOrder, Guid userID, Guid exchangeID)
         {
             if (!botOrder.BinaceOrderID.HasValue)
             {

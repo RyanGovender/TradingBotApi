@@ -11,7 +11,7 @@ namespace TradingBot.ORM.Base
     {
         private readonly IRelationalConnectionFactory _conn;
 
-        public Base(IRelationalConnectionFactory connection!!)
+        public Base(IRelationalConnectionFactory connection)
         {
             _conn = connection;
         }

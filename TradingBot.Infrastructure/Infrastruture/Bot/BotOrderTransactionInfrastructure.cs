@@ -20,7 +20,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             _transactionRepo = transactionRepo;
         }
 
-        public async Task<Result> InsertBotOrderTransactionAsync(Guid botOrderID, long binanceOrderID, bool isOrderFilled, Transactions transactions!!)
+        public async Task<Result> InsertBotOrderTransactionAsync(Guid botOrderID, long binanceOrderID, bool isOrderFilled, Transactions transactions)
         {
             var transactionResult = await _transactionRepo.InsertAsync(transactions);
 

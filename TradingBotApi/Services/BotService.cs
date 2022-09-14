@@ -120,7 +120,7 @@ namespace TradingBot.Api.Services
                         { CurrencySymbol = botAggregate.TradingSymbol, OrderSideId = (int)Trade.SELL, OrderTypeId = botAggregate.OrderTypeID, Quantity = botAggregate.Quantity });
                         if (sellPrice.IsSuccess)
                             await _uow.BotOrderTransactionRepository
-                        .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, sellPrice.Id, sellPrice.IsOrderFilled, new Transactions(TransactionType.BUY, sellPrice.Price, resultbot.UserID, resultbot.ExchangeID, sellPrice.QuantityFilled));
+                        .InsertBotOrderTransactionAsync(botAggregate.BotOrderID, sellPrice.Id, sellPrice.IsOrderFilled, new Transactions(TransactionType.SELL, sellPrice.Price, resultbot.UserID, resultbot.ExchangeID, sellPrice.QuantityFilled));
                         break;
                     case Trade.HOLD:
                         _logger.LogDebug("{0} is holding : current Value {1}", botAggregate.TradingSymbol, currentPrice);

@@ -21,7 +21,7 @@ namespace TradingBot.Domain.Strategies
 
         public TradeStrategy TradeStrategy => TradeStrategy.SIMPLE_TRADE;
 
-        public Trade TradeStategy(MarketData marketData!!)
+        public Trade TradeStategy(MarketData marketData)
         {
             if (marketData.PurchasePrice <= 0)
                 return Trade.BUY;

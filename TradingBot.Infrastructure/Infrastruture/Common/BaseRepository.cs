@@ -16,7 +16,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             _logger = logger;
         }
 
-        public async Task<Result> DeleteAsync(T entityToDelete!!)
+        public async Task<Result> DeleteAsync(T entityToDelete)
         {
             var result = await _base.DeleteAsync(entityToDelete);
 
@@ -47,7 +47,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             return result?.Source != null && result.IsSuccess ? result.Source : Array.Empty<T>();
         }
 
-        public virtual async Task<Result> InsertAsync(T data!!)
+        public virtual async Task<Result> InsertAsync(T data)
         {
            var result = await _base.InsertAsync(data);
 
@@ -57,7 +57,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Common
             return result?.IsSuccess ?? false ? Result.SUCCESSFUL : Result.FAILED;
         }
 
-        public async Task<Result> UpdateAsync(T data!!)
+        public async Task<Result> UpdateAsync(T data)
         {
             var result = await _base.UpdateAsync(data);
 

@@ -25,7 +25,7 @@ namespace TradingBot.Infrastructure.Infrastruture.Bot
             _transactionRepo = transaction;
         }
 
-        public async Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder!!)
+        public async Task<BotOrderAggregate> GetBotOrderAggregate(BotOrder botOrder)
         {
             //check if first trade
             // get last price from transactions using last buy transaction type
